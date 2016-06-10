@@ -121,14 +121,14 @@ public final class ScheduleView extends CssLayout implements View {
             }
         });
         
-        calendar.addListener(new EventClickListener() {
+        /*calendar.addListener(new EventClickListener() {
             @Override
             public void eventClick(final EventClick event) {
                 BasicEvent e = (BasicEvent) event.getCalendarEvent();
                 Notification.show("Event clicked: " + e.getCaption());
                
             }
-        });
+        });*/
 
         /*calendar.addListener(new EventClickListener() {
             @Override
