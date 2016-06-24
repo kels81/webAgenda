@@ -48,6 +48,7 @@ public final class DashboardView extends Panel implements View,
     public static final String TITLE_ID = "dashboard-title";
 
     private Label titleLabel;
+    private Label titleLabel1;
     private NotificationsButton notificationsButton;
     private CssLayout dashboardPanels;
     private final VerticalLayout root;
@@ -126,6 +127,14 @@ public final class DashboardView extends Panel implements View,
         tools.setSpacing(true);
         tools.addStyleName("toolbar");
         header.addComponent(tools);
+//        
+//        titleLabel1 = new Label("Body");
+//        titleLabel1.setId(TITLE_ID);
+//        titleLabel1.setSizeUndefined();
+//        titleLabel1.addStyleName(ValoTheme.LABEL_H1);
+//        titleLabel1.addStyleName(ValoTheme.LABEL_NO_MARGIN);
+//        header.addComponent(titleLabel1);
+        
 
         return header;
     }
