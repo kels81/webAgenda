@@ -40,6 +40,7 @@ import com.vaadin.ui.themes.ValoTheme;
 public class SalesView extends VerticalLayout implements View {
     private CssLayout dashboardPanels;
     private ComboBox movieSelect;
+    
 
        
     public SalesView() {
