@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.common.eventbus.Subscribe;
-import com.vaadin.addon.timeline.Timeline.EventClickListener;
 import com.vaadin.demo.dashboard.DashboardUI;
 import com.vaadin.demo.dashboard.component.MovieDetailsWindow;
 import com.vaadin.demo.dashboard.domain.Movie;
@@ -35,11 +34,13 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventResize;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.MoveEvent;
-import com.vaadin.ui.components.calendar.event.BasicEvent;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectEvent;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
@@ -69,7 +70,7 @@ public final class ScheduleView extends CssLayout implements View {
         tray = buildTray();
         addComponent(tray);
 
-        injectMovieCoverStyles();
+        //injectMovieCoverStyles();
     }
 
     @Override
@@ -110,41 +111,25 @@ public final class ScheduleView extends CssLayout implements View {
         calendar = new Calendar(new MovieEventProvider());
         calendar.setWidth(100.0f, Unit.PERCENTAGE);
         calendar.setHeight(1000.0f, Unit.PIXELS);
+        calendar.setWeeklyCaptionFormat("dd MMM yyyy");
+        
 
+        //MANEJAR EL CLICK SOBRE UN EVENTO YA AGENDADO
         calendar.setHandler(new EventClickHandler() {
             @Override
             public void eventClick(final EventClick event) {
                 setTrayVisible(false);
                 MovieEvent movieEvent = (MovieEvent) event.getCalendarEvent();
-                MovieDetailsWindow.open(movieEvent.getMovie(),
-                        movieEvent.getStart(), movieEvent.getEnd());
+                MovieDetailsWindow.open(movieEvent.getStart(), movieEvent.getEnd(), false);
             }
         });
-        
-        /*calendar.addListener(new EventClickListener() {
-            @Override
-            public void eventClick(final EventClick event) {
-                BasicEvent e = (BasicEvent) event.getCalendarEvent();
-                Notification.show("Event clicked: " + e.getCaption());
-               
-            }
-        });*/
-
-        /*calendar.addListener(new EventClickListener() {
-            @Override
-            public void eventClick(EventClick event) {
-                BasicEvent e = (BasicEvent) event.getCalendarEvent();
-                getMainWindow().showNotification(
-                        "Event clicked: " + e.getCaption(),
-                        e.getDescription());
-            }
-        });*/
 
         calendarLayout.addComponent(calendar);
 
-        calendar.setFirstVisibleHourOfDay(11);
-        calendar.setLastVisibleHourOfDay(23);
+        calendar.setFirstVisibleHourOfDay(9);       //PRIMER HORA DEL DIA
+        calendar.setLastVisibleHourOfDay(22);       //ULTIMA HORA DEL DIA
 
+        //MANEJAR CLICK CUANDO ARRASTRAS UN EVENTO A OTRO HORARIO
         calendar.setHandler(new BasicEventMoveHandler() {
             @Override
             public void eventMove(final MoveEvent event) {
@@ -172,8 +157,18 @@ public final class ScheduleView extends CssLayout implements View {
         calendar.setHandler(new BasicEventResizeHandler() {
             @Override
             public void eventResize(final EventResize event) {
-                Notification
-                        .show("You're not allowed to change the movie duration");
+                Notification.show("You're not allowed to change the movie duration");                
+            }
+        });
+
+        //MANEJAR SELECCION DE HORAS EN EL CALENDARIO
+        calendar.setHandler(new RangeSelectHandler() {
+
+            @Override
+            public void rangeSelect(final RangeSelectEvent event) {
+                //Notification.show("Has seleccionado una fecha: " + event.getStart() + " " + event.getEnd());
+                setTrayVisible(false);
+                MovieDetailsWindow.open(event.getStart(), event.getEnd(), true);
             }
         });
 
