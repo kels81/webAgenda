@@ -252,6 +252,7 @@ public final class MovieDetailsWindow extends Window {
             public void valueChange(Property.ValueChangeEvent event) {
                 Object value = event.getProperty().getValue();
                 System.out.println("value = " + value);
+                
                 /*if (value instanceof Boolean && Boolean.TRUE.equals(true)) {
                     setFormDateResolution(value);
 
