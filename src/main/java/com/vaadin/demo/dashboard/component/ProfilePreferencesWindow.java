@@ -55,7 +55,7 @@ public class ProfilePreferencesWindow extends Window {
     private TextField txtApPaterno;
     @PropertyId("lastName2")
     private TextField txtApMaterno;
-    @PropertyId("title")
+    //@PropertyId("title")
     private ComboBox cmbTitulo;
     @PropertyId("male")
     private OptionGroup rdbGenero;
@@ -84,8 +84,7 @@ public class ProfilePreferencesWindow extends Window {
     private TextField txtRepPassword;
     private ComboBox cmbRol;
 
-    private ProfilePreferencesWindow(final User user,
-            final boolean preferencesTabOpen) {
+    private ProfilePreferencesWindow(final User user, final boolean preferencesTabOpen) {
         addStyleName("profile-window");
         setId(ID);
         Responsive.makeResponsive(this);
@@ -128,7 +127,7 @@ public class ProfilePreferencesWindow extends Window {
         HorizontalLayout root = new HorizontalLayout();
         root.setCaption("Perfil");
         root.setIcon(FontAwesome.USER);
-        root.setWidth(100.0f, Unit.PERCENTAGE);
+        root.setWidth(100.0f, Unit.PERCENTAGE);     //importante
         root.setSpacing(true);
         root.setMargin(true);
         root.addStyleName("profile-form");
@@ -171,14 +170,21 @@ public class ProfilePreferencesWindow extends Window {
         details.addComponent(txtApMaterno);
 
         cmbTitulo = new ComboBox("Title");
-        cmbTitulo.setInputPrompt("Please specify");
+        //cmbTitulo.setInputPrompt("Please specify");
         cmbTitulo.addItem("Mr.");
         cmbTitulo.addItem("Mrs.");
         cmbTitulo.addItem("Ms.");
         cmbTitulo.setNullSelectionAllowed(false);
+        cmbTitulo.select("Mr.");
         //cmbTitulo.setNewItemsAllowed(true);
         details.addComponent(cmbTitulo);
 
+        //birthDate = new DateField("Fecha Nacimiento");
+        birthDate = new PopupDateField("Fecha Nacimiento");
+        birthDate.setDateFormat("dd/MMM/yyyy");
+        birthDate.setTextFieldEnabled(false);
+        details.addComponent(birthDate);
+        
         rdbGenero = new OptionGroup("Género");
         rdbGenero.addItem(Boolean.FALSE);
         rdbGenero.setItemCaption(Boolean.FALSE, "Femenino");
@@ -187,11 +193,7 @@ public class ProfilePreferencesWindow extends Window {
         rdbGenero.addStyleName("horizontal");
         details.addComponent(rdbGenero);
         
-        //birthDate = new DateField("Fecha Nacimiento");
-        birthDate = new PopupDateField("Fecha Nacimiento");
-        birthDate.setDateFormat("dd/MMM/yyyy");
-        birthDate.setTextFieldEnabled(false);
-        details.addComponent(birthDate);
+        
         
         
         
@@ -250,14 +252,12 @@ public class ProfilePreferencesWindow extends Window {
         HorizontalLayout root = new HorizontalLayout();
         root.setCaption("Configuración");
         root.setIcon(FontAwesome.COGS);
-        root.setSpacing(true);
+        root.setWidth(100.0f, Unit.PERCENTAGE);
         root.setMargin(true);
-        root.setSizeFull();
         
         FormLayout details = new FormLayout();
         details.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
         root.addComponent(details);
-        root.setExpandRatio(details, 1);
 
         //[ PRIMERA SECCION ]        
         Label lblSeccion = new Label("Datos Usuario");
@@ -274,11 +274,12 @@ public class ProfilePreferencesWindow extends Window {
         txtRepPassword = new TextField("Repetir Password");
         details.addComponent(txtRepPassword);
         cmbRol = new ComboBox("Rol");
+        cmbRol.setInputPrompt("Please specify");
         cmbRol.addItem("Medico");
         cmbRol.addItem("Psicologo");
         cmbRol.addItem("Nutriologo");
         cmbRol.setNullSelectionAllowed(false);
-        cmbRol.setValue("Psicologo");
+        //cmbRol.setValue("Psicologo");
         details.addComponent(cmbRol);
         
         //root.addComponent(message);
@@ -304,7 +305,7 @@ public class ProfilePreferencesWindow extends Window {
                     // not in this demo.
 
                     Notification success = new Notification(
-                            "Perfil actualizadoexitosamente");
+                            "Perfil actualizado exitosamente");
                     success.setDelayMsec(2000);
                     success.setStyleName("bar success small");
                     success.setPosition(Position.TOP_CENTER);
