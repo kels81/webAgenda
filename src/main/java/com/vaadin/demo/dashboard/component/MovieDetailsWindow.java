@@ -12,6 +12,7 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Responsive;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -47,7 +48,7 @@ public final class MovieDetailsWindow extends Window {
     private MovieDetailsWindow(final Movie movie, final Date startTime, final Date endTime) {
         addStyleName("moviedetailswindow");
         Responsive.makeResponsive(this);
-
+        
         setCaption(movie.getTitle());
         center();
         setCloseShortcut(KeyCode.ESCAPE, null);
@@ -70,11 +71,12 @@ public final class MovieDetailsWindow extends Window {
     }
 
     private MovieDetailsWindow(final Date startTime, final Date endTime, boolean newEvent) {
-        addStyleName("moviedetailswindow");
-        //addStyleName("profile-window");
+        //addStyleName("moviedetailswindow");
+        addStyleName("profile-window");
         Responsive.makeResponsive(this);
 
-        center();
+        setModal(true);
+        //center();
         setCloseShortcut(KeyCode.ESCAPE, null);
         setResizable(false);
         setClosable(false);
@@ -82,6 +84,7 @@ public final class MovieDetailsWindow extends Window {
 
         VerticalLayout content = new VerticalLayout();
         content.setSizeFull();
+        content.setMargin(new MarginInfo(true, false, false, false));
         setContent(content);
 
         TabSheet detailsWrapper = new TabSheet();
@@ -136,20 +139,19 @@ public final class MovieDetailsWindow extends Window {
      return details;
      }*/
     private Component buildMovieDetails(final Date startTime, final Date endTime, boolean newEvent) {
-        VerticalLayout details = new VerticalLayout();
+        HorizontalLayout details = new HorizontalLayout();
         String caption = newEvent ? "Nueva Cita" : "Editar Cita";
         details.setCaption(caption);
         details.setIcon(FontAwesome.CALENDAR_CHECK_O);
-        details.setWidth(100.0f, Unit.PERCENTAGE);
-        details.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
+        details.setWidth(100.0f, Unit.PERCENTAGE);      //importante
         details.setMargin(true);
-        details.setSpacing(true);
+        //details.setSpacing(true);
 
 //        Component label = buildLabel(startTime);
 //        details.addComponent(label);
         Component detailsForm = buildDetailsForm(startTime, endTime);
         details.addComponent(detailsForm);
-        details.setExpandRatio(detailsForm, 1);
+        //details.setExpandRatio(detailsForm, 1);
 
         return details;
     }
@@ -214,10 +216,10 @@ public final class MovieDetailsWindow extends Window {
     private Component buildDetailsForm(final Date startTime, final Date endTime) {
         FormLayout fields = new FormLayout();
         fields.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
-        fields.setSpacing(false);
-        fields.setMargin(false);
+        //fields.setSpacing(false);
+        //fields.setMargin(false);
 
-        txtstartDate = createDateField("Start date");
+        //txtstartDate = createDateField("Start date");
 
         Label lblDate = new Label(setUpperMonth(startTime));
         lblDate.addStyleName(ValoTheme.LABEL_H4);
