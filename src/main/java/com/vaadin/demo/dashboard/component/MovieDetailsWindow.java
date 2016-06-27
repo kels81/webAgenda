@@ -254,7 +254,7 @@ public final class MovieDetailsWindow extends Window {
             public void valueChange(Property.ValueChangeEvent event) {
                 Object value = event.getProperty().getValue();
                 System.out.println("value = " + value);
-                
+                verCheck(value);
                 /*if (value instanceof Boolean && Boolean.TRUE.equals(true)) {
                     setFormDateResolution(value);
 
@@ -363,16 +363,31 @@ public final class MovieDetailsWindow extends Window {
         return hours;
     }
     
-    private void setFormDateResolution(boolean resolution) {
+    private void setFormDateResolution(Object resolution) {
+        
+        
         if (cmbHoursStart != null && cmbHoursEnd != null) {
-            cmbHoursStart.setReadOnly(resolution);
-            cmbHoursEnd.setReadOnly(resolution);
+            Boolean booleano = Boolean.valueOf(resolution.toString());
+            System.out.println("booleano = " + booleano);
+            if (booleano.equals(true)){
+            cmbHoursStart.setEnabled(false);
+            cmbHoursEnd.setEnabled(false);
         }
+    }
     }
     
     private CheckBox createCheckBox(String caption) {
         CheckBox cb = new CheckBox(caption);
         cb.setImmediate(true);
         return cb;
+    }
+    private void verCheck(Object value) {
+        if (value.equals(true)) {
+            setFormDateResolution(value);
+
+        } else {
+            cmbHoursStart.setEnabled(true);
+            cmbHoursEnd.setEnabled(true);
+        }
     }
 }
