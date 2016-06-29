@@ -3,6 +3,7 @@ package com.vaadin.demo.dashboard.component;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.PropertyId;
+import com.vaadin.demo.dashboard.DashboardUtils;
 import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.ProfileUpdatedEvent;
@@ -85,7 +86,7 @@ public class ProfilePreferencesWindow extends Window {
     private ComboBox cmbRol;
 
     private ProfilePreferencesWindow(final User user, final boolean preferencesTabOpen) {
-        addStyleName("profile-window");
+        addStyleName("profile-window");        
         setId(ID);
         Responsive.makeResponsive(this);
 
@@ -176,74 +177,17 @@ public class ProfilePreferencesWindow extends Window {
         cmbTitulo.addItem("Ms.");
         cmbTitulo.setNullSelectionAllowed(false);
         cmbTitulo.select("Mr.");
-        //cmbTitulo.setNewItemsAllowed(true);
         details.addComponent(cmbTitulo);
 
         //birthDate = new DateField("Fecha Nacimiento");
-        birthDate = new PopupDateField("Fecha Nacimiento");
-        birthDate.setDateFormat("dd/MMM/yyyy");
-        birthDate.setTextFieldEnabled(false);
+        DashboardUtils util = new DashboardUtils();
+        birthDate = util.createDateField("Fecha Nacimiento");
         details.addComponent(birthDate);
         
-        rdbGenero = new OptionGroup("Género");
-        rdbGenero.addItem(Boolean.FALSE);
-        rdbGenero.setItemCaption(Boolean.FALSE, "Femenino");
-        rdbGenero.addItem(Boolean.TRUE);
-        rdbGenero.setItemCaption(Boolean.TRUE, "Masculino");
-        rdbGenero.addStyleName("horizontal");
+        rdbGenero = util.createRadioGenero("Género");
         details.addComponent(rdbGenero);
         
         
-        
-        
-        
-        // [ SEGUNDA SECCION ]
-        /*lblSeccion = new Label("Contact Info");
-        lblSeccion.addStyleName(ValoTheme.LABEL_H4);
-        lblSeccion.addStyleName(ValoTheme.LABEL_COLORED);
-        details.addComponent(lblSeccion);
-
-        emailField = new TextField("Email");
-        emailField.setWidth("100%");
-        emailField.setRequired(true);
-        emailField.setNullRepresentation("");
-        details.addComponent(emailField);
-
-        locationField = new TextField("Location");
-        locationField.setWidth("100%");
-        locationField.setNullRepresentation("");
-        locationField.setComponentError(new UserError(
-                "This address doesn't exist"));
-        details.addComponent(locationField);
-
-        phoneField = new TextField("Phone");
-        phoneField.setWidth("100%");
-        phoneField.setNullRepresentation("");
-        details.addComponent(phoneField);
-
-        newsletterField = new OptionalSelect<Integer>();
-        newsletterField.addOption(0, "Daily");
-        newsletterField.addOption(1, "Weekly");
-        newsletterField.addOption(2, "Monthly");
-        details.addComponent(newsletterField);
-
-        lblSeccion = new Label("Additional Info");
-        lblSeccion.addStyleName(ValoTheme.LABEL_H4);
-        lblSeccion.addStyleName(ValoTheme.LABEL_COLORED);
-        details.addComponent(lblSeccion);
-
-        websiteField = new TextField("Website");
-        websiteField.setInputPrompt("http://");
-        websiteField.setWidth("100%");
-        websiteField.setNullRepresentation("");
-        details.addComponent(websiteField);
-
-        bioField = new TextArea("Bio");
-        bioField.setWidth("100%");
-        bioField.setRows(4);
-        bioField.setNullRepresentation("");
-        details.addComponent(bioField);*/
-
         return root;
     }
     
@@ -275,16 +219,12 @@ public class ProfilePreferencesWindow extends Window {
         details.addComponent(txtRepPassword);
         cmbRol = new ComboBox("Rol");
         cmbRol.setInputPrompt("Please specify");
-        cmbRol.addItem("Medico");
-        cmbRol.addItem("Psicologo");
-        cmbRol.addItem("Nutriologo");
+        cmbRol.addItem("Médico");
+        cmbRol.addItem("Psicólogo");
+        cmbRol.addItem("Nutriólogo");
         cmbRol.setNullSelectionAllowed(false);
-        //cmbRol.setValue("Psicologo");
+        cmbRol.setValue("Psicólogo");
         details.addComponent(cmbRol);
-        
-        //root.addComponent(message);
-        //root.setComponentAlignment(message, Alignment.MIDDLE_CENTER);
-        
 
         return root;
     }
