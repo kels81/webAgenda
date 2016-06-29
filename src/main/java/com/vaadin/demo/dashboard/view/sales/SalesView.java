@@ -28,13 +28,15 @@ import com.vaadin.ui.Panel;
 @SuppressWarnings("serial")
 public class SalesView extends Panel implements View {
 
-    //private final HorizontalLayout details;
     private final VerticalLayout root;
+    private final DashboardUtils util = new DashboardUtils();
+    
     private TextField txtNombre;
     private TextField txtApPaterno;
     private TextField txtApmaterno;
     private TextField txtEmail;
     private TextField txtTelefono;
+    private TextField txtCelular;
     private TextField txtCURP;
     
     private ComboBox cmbProfesion;
@@ -45,9 +47,7 @@ public class SalesView extends Panel implements View {
     private PopupDateField txtFechNac;
 
     private OptionGroup rdbGenero;
-    
-    private DashboardUtils util = new DashboardUtils();
-    
+
     
     public SalesView() {
         addStyleName(ValoTheme.PANEL_BORDERLESS);
@@ -59,13 +59,7 @@ public class SalesView extends Panel implements View {
         root.addComponent(buildHeader());
        
         root.addComponent(buildForm());
-        //details = buildForm();
-       // root.addComponent(details);
-        //root.setExpandRatio(details, 1);
-        
         root.addComponent(buildFooter());
-        
-        
         
         setContent(root);
         Responsive.makeResponsive(root);
@@ -91,8 +85,6 @@ public class SalesView extends Panel implements View {
     private Component buildForm() {
         HorizontalLayout detailsForm = new HorizontalLayout();
         detailsForm.addStyleName("formulario");
-        
-        
         detailsForm.setWidth(100.0f, Unit.PERCENTAGE);                      //importante
         detailsForm.setMargin(new MarginInfo(false, true, true, true));
         detailsForm.setSpacing(true);
@@ -103,16 +95,11 @@ public class SalesView extends Panel implements View {
         FormLayout form2 = new FormLayout();
         form2.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
         
-        FormLayout form3 = new FormLayout();
-        form3.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
-        
         detailsForm.addComponent(form1);
         detailsForm.addComponent(form2);
-        detailsForm.addComponent(form3);
-        
         
         //Label lblSeccion = util.createLabelH4("Datos Generales");
-        
+        //CREACION FORMULARIO 1
         
         txtNombre   = util.createTextField("Nombre(s)");
         txtApPaterno= util.createTextField("Apellido Paterno");
@@ -123,59 +110,30 @@ public class SalesView extends Panel implements View {
         cmbEstados  = util.createComboEstados("Estado Nacimiento");
         txtCURP     = util.createTextField("CURP");
         
-        
-        
         form1.addComponent(txtNombre);
         form1.addComponent(txtApPaterno);
         form1.addComponent(txtApmaterno);
         form1.addComponent(txtFechNac);
         form1.addComponent(rdbGenero);
         form1.addComponent(cmbEstados);
+        form1.addComponent(txtCURP);
         
+        //CREACION FORMULARIO 2
         
-        ComboBox cmbProfesion2= util.createComboProfesion("Profesión");
-        ComboBox cmbEdoCivil2 = util.createComboEdoCivil("Estado Civil");
-        ComboBox cmbReligion2 = util.createComboReligion("Religión");
-        TextField txtEmail2    = util.createTextField("Email");
-        TextField txtTelefono2 = util.createTextField("Teléfono");
+        cmbProfesion= util.createComboProfesion("Profesión");
+        cmbEdoCivil = util.createComboEdoCivil("Estado Civil");
+        cmbReligion = util.createComboReligion("Religión");
+        txtEmail    = util.createTextField("Email");
+        txtTelefono = util.createTextField("Teléfono");
+        txtCelular  = util.createTextField("Tel. Celular");
         
-        form2.addComponent(cmbProfesion2);
-        form2.addComponent(cmbEdoCivil2);
-        form2.addComponent(cmbReligion2);
-        form2.addComponent(txtEmail2);
-        form2.addComponent(txtTelefono2);
-        
-        
-        ComboBox cmbProfesion3= util.createComboProfesion("Profesión3");
-        ComboBox cmbEdoCivil3 = util.createComboEdoCivil("Estado Civil3");
-        ComboBox cmbReligion3 = util.createComboReligion("Religión3");
-        TextField txtEmail3    = util.createTextField("Email3");
-        TextField txtTelefono3 = util.createTextField("Teléfono3");
-        
-        form3.addComponent(cmbProfesion3);
-        form3.addComponent(cmbEdoCivil3);
-        form3.addComponent(cmbReligion3);
-        form3.addComponent(txtEmail3);
-        form3.addComponent(txtTelefono3);
-        
-        
-        TextField txtNombre2 = util.createTextField("Nombre");
-        TextField txtApPaterno2 = util.createTextField("Apellido Paterno");
-        TextField txtApmaterno2 = util.createTextField("Apellido Materno");
-        PopupDateField txtFechNac2 = util.createDateField("Fecha Nacimiento");
-        OptionGroup rdbGenero2 = util.createRadioGenero("Género");
-        rdbGenero2.select(true);
-        //TextField txtEmail2 = util.createTextField("Email");
-        //TextField txtTelefono2 = util.createTextField("Teléfono");
-        
-        form2.addComponent(txtNombre2);
-        form2.addComponent(txtApPaterno2);
-        form2.addComponent(txtApmaterno2);
-        form2.addComponent(txtFechNac2);
-        //form2.addComponent(rdbGenero2);
-        //form2.addComponent(txtEmail2);
-        //form2.addComponent(txtTelefono2);
-        
+        form2.addComponent(cmbProfesion);
+        form2.addComponent(cmbEdoCivil);
+        form2.addComponent(cmbReligion);
+        form2.addComponent(txtEmail);
+        form2.addComponent(txtTelefono);
+        form2.addComponent(txtCelular);
+
         
         return detailsForm;
 
