@@ -11010,15 +11010,9 @@ div.v-layout.v-horizontal.v-widget {
 
 .dashboard .form-content {
 	max-height: 480px;
-	//width: 720px;
 	max-width: 100%;
-        overflow: visible;
+	overflow: visible;
 }
-
-/*.dashboard .form-content .v-tabsheet-content > div > .v-scrollable > .v-layout {
-	padding-left: 37px;
-	padding-right: 37px;
-}*/
 
 .dashboard .form-content .v-horizontallayout {
 	white-space: normal !important;
@@ -11028,20 +11022,15 @@ div.v-layout.v-horizontal.v-widget {
 	padding-left: 0 !important;
 }
 
-.dashboard .form-content[width-range~="0-700px"] .formulario > .v-expand  > .v-slot {       //cambie
+.dashboard .form-content[width-range~="0-700px"] .formulario > .v-expand  > .v-slot {
 	display: block;
 	margin-left: 0 !important;
-        //width: 100%;
+	width: 100% !important;
 }
 
-/*.dashboard .form-content[width-range~="0-700px"] .profile-form > .v-expand  > .v-spacing {
+.dashboard .form-content[width-range~="0-700px"] .formulario > .v-expand  > .v-spacing {
 	height: 12px;
-}*/
-
-/*.dashboard .form-content[width-range~="0-600px"] .v-tabsheet-content > div > .v-scrollable > .v-layout {
-	padding-left: 19px;
-	padding-right: 19px;
-}*/
+}
 
 .dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-captioncell, .dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-errorcell, .dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-contentcell {
 	display: inline-block;
@@ -11063,10 +11052,6 @@ div.v-layout.v-horizontal.v-widget {
 .dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-label-h4 {
 	position: static;
 }
-
-/*.dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-horizontallayout {
-	height: auto !important;
-}*/
 
 .dashboard .moviedetailswindow {
 	max-height: 480px;
