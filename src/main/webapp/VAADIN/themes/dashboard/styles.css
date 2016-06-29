@@ -4017,7 +4017,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .dashboard [class*="margin-bottom"] > tbody > [class*="lastrow"] > td {
-	padding-bottom: 37px;
+	padding-bottom: 0px;
 }
 
 .dashboard [class*="margin-left"] > tbody > [class*="row"] > [class*="captioncell"] {
@@ -4087,7 +4087,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .dashboard .v-formlayout.light  > table > tbody > [class*="lastrow"] > td {
-	border-bottom: none;
+	border-bottom: 1px solid #eaeaea;
 }
 
 .dashboard .v-formlayout.light  > table > tbody > tr > [class*="captioncell"] {
@@ -11007,6 +11007,66 @@ div.v-layout.v-horizontal.v-widget {
 .dashboard .profile-window[width-range~="0-600px"] .v-formlayout > table > tbody .v-horizontallayout {
 	height: auto !important;
 }
+
+.dashboard .form-content {
+	max-height: 480px;
+	//width: 720px;
+	max-width: 100%;
+        overflow: visible;
+}
+
+/*.dashboard .form-content .v-tabsheet-content > div > .v-scrollable > .v-layout {
+	padding-left: 37px;
+	padding-right: 37px;
+}*/
+
+.dashboard .form-content .v-horizontallayout {
+	white-space: normal !important;
+}
+
+.dashboard .form-content[width-range~="0-700px"] .formulario > .v-expand {
+	padding-left: 0 !important;
+}
+
+.dashboard .form-content[width-range~="0-700px"] .formulario > .v-expand  > .v-slot {       //cambie
+	display: block;
+	margin-left: 0 !important;
+        //width: 100%;
+}
+
+/*.dashboard .form-content[width-range~="0-700px"] .profile-form > .v-expand  > .v-spacing {
+	height: 12px;
+}*/
+
+/*.dashboard .form-content[width-range~="0-600px"] .v-tabsheet-content > div > .v-scrollable > .v-layout {
+	padding-left: 19px;
+	padding-right: 19px;
+}*/
+
+.dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-captioncell, .dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-errorcell, .dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-contentcell {
+	display: inline-block;
+	height: auto;
+}
+
+.dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-captioncell, .dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-errorcell {
+	border-bottom: none;
+	line-height: 1;
+	padding-left: 0;
+	padding-top: 12px;
+	text-align: left;
+}
+
+.dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-caption-h4 {
+	height: 0;
+}
+
+.dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-label-h4 {
+	position: static;
+}
+
+/*.dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-horizontallayout {
+	height: auto !important;
+}*/
 
 .dashboard .moviedetailswindow {
 	max-height: 480px;
