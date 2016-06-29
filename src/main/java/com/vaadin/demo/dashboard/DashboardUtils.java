@@ -6,6 +6,7 @@
 package com.vaadin.demo.dashboard;
 
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PopupDateField;
@@ -59,6 +60,47 @@ public class DashboardUtils {
         lbl.addStyleName(ValoTheme.LABEL_H4);
         lbl.addStyleName(ValoTheme.LABEL_COLORED);
         return lbl;
+    }
+    
+    public ComboBox createComboEstados(String caption) {
+        ComboBox cmb = new ComboBox(caption);
+        //cmb.setInputPrompt("");
+        cmb.setNullSelectionAllowed(false);
+        cmb.addItems("Aguascalientes","Baja California","Baja California Sur","Campeche",
+                     "Chiapas","Chihuahua","Coahuila","Colima","Distrito Federal","Durango",
+                     "Guanajuato","Guerrero","Hidalgo","Jalisco","México","Michoacán","Morelos",
+                     "Nayarit","Nuevo León","Oaxaca","Puebla","Querétaro","Quintana Roo","San Luis Potosí",
+                     "Sinaloa","Sonora","Tabasco","Tamaulipas","Tlaxcala","Veracruz","Yucatán","Zacatecas");
+        return cmb;
+    }
+    
+    public ComboBox createComboEdoCivil(String caption) {
+        ComboBox cmb = new ComboBox(caption);
+        //cmb.setInputPrompt("");
+        cmb.setNullSelectionAllowed(false);
+        cmb.addItems("Soltero(a)","Casado(a)","Viudo(a)","Divorciado(a)","Unión Libre","Concubinato");
+        return cmb;
+    }
+    
+    public ComboBox createComboReligion(String caption) {
+        ComboBox cmb = new ComboBox(caption);
+        //cmb.setInputPrompt("");
+        cmb.setNullSelectionAllowed(false);
+        cmb.addItems("Católica","Protestante","Evangélica","Testigos de Jehová","Adventista","Mormón","Judaísmo","Islámica");
+        return cmb;
+    }
+    
+    public ComboBox createComboProfesion(String caption) {
+        ComboBox cmb = new ComboBox(caption);
+        //cmb.setInputPrompt("");
+        cmb.setNullSelectionAllowed(false);
+        cmb.addItems("Administrativos","Biología","Comunicaciones","Construcción","Contabilidad",
+                     "Creatividad","Producción","Diseño Comercial","Derecho y Leyes","Educación",
+                     "Ingeniería","Logística","Transportación y Distribución","Manufactura", "Produción y Operación",
+                     "Mercadotecnia","Publicidad y Relaciones Públicas","Recursos Humanos","Salud y Belleza",
+                     "Sector Salud","Seguro y Reaseguro","Tecnología de la Información / Sistemas","Turismo","Hospitalidad y Gastronomía",
+                     "Ventas","Veterinaria / Zoologia");
+        return cmb;
     }
     
 }
