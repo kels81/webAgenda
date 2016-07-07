@@ -108,6 +108,48 @@ public final class ScheduleView extends CssLayout implements View {
         calendarLayout.setCaption("Calendario");
         calendarLayout.setMargin(true);
 
+        HorizontalLayout hori = new HorizontalLayout();
+        Button ok = new Button("DÍA");  
+        ok.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+               
+            }
+        });
+        
+        Button sem = new Button("SEMANA");
+        sem.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+               java.util.Calendar initialView = java.util.Calendar.getInstance();
+        initialView.add(java.util.Calendar.DAY_OF_WEEK,
+                -initialView.get(java.util.Calendar.DAY_OF_WEEK) + 1);
+        calendar.setStartDate(initialView.getTime());
+
+        initialView.add(java.util.Calendar.DAY_OF_WEEK, 6);
+        calendar.setEndDate(initialView.getTime());
+            }
+        });
+        
+        Button mes = new Button("MES");
+        mes.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+               java.util.Calendar initialView = java.util.Calendar.getInstance();
+                initialView.add(java.util.Calendar.DAY_OF_WEEK_IN_MONTH,
+                -initialView.get(java.util.Calendar.DAY_OF_WEEK_IN_MONTH) + 0);
+                calendar.setStartDate(initialView.getTime());
+
+                initialView.add(java.util.Calendar.DAY_OF_WEEK_IN_MONTH, 4);
+                calendar.setEndDate(initialView.getTime());
+            }
+        });
+        
+        hori.addComponent(ok);
+        hori.addComponent(sem);
+        hori.addComponent(mes);
+        calendarLayout.addComponent(hori);
+        
         calendar = new Calendar(new MovieEventProvider());
         calendar.setWidth(100.0f, Unit.PERCENTAGE);
         calendar.setHeight(1000.0f, Unit.PIXELS);
