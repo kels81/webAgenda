@@ -24,6 +24,10 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.TextArea;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 @SuppressWarnings("serial")
 public class SalesView extends Panel implements View {
@@ -38,15 +42,26 @@ public class SalesView extends Panel implements View {
     private TextField txtTelefono;
     private TextField txtCelular;
     private TextField txtCURP;
+    private TextField txtNombreCom;
+    private TextField txtTelefonoMed;
+    private TextField txtNombreParent;
+    private TextField txtTelefonoParent;
+    private TextField txtFechaProceso;
+    private TextField txtContacto;
+    private TextField txtMotConsulta;
+    
+    private TextArea txAEnfermedades;
+    private TextArea txAMedicamento;
     
     private ComboBox cmbProfesion;
     private ComboBox cmbEstados;
     private ComboBox cmbEdoCivil;
     private ComboBox cmbReligion;
+    private ComboBox cmbParentesco;
+    private ComboBox cmbGenero;
     
     private PopupDateField txtFechNac;
 
-    private OptionGroup rdbGenero;
 
     
     public SalesView() {
@@ -59,6 +74,8 @@ public class SalesView extends Panel implements View {
         root.addComponent(buildHeader());
        
         root.addComponent(buildForm());
+        root.addComponent(buildEnfermedades());
+        root.addComponent(buildConsulta());
         root.addComponent(buildFooter());
         
         setContent(root);
@@ -105,8 +122,7 @@ public class SalesView extends Panel implements View {
         txtApPaterno= util.createTextField("Apellido Paterno");
         txtApmaterno= util.createTextField("Apellido Materno");
         txtFechNac  = util.createDateField("Fecha Nacimiento");
-        rdbGenero   = util.createRadioGenero("Género");
-        rdbGenero.select(false);
+        cmbGenero   = util.createComboGenero("Género");
         cmbEstados  = util.createComboEstados("Estado Nacimiento");
         txtCURP     = util.createTextField("CURP");
         
@@ -114,7 +130,7 @@ public class SalesView extends Panel implements View {
         form1.addComponent(txtApPaterno);
         form1.addComponent(txtApmaterno);
         form1.addComponent(txtFechNac);
-        form1.addComponent(rdbGenero);
+        form1.addComponent(cmbGenero);
         form1.addComponent(cmbEstados);
         form1.addComponent(txtCURP);
         
@@ -134,6 +150,78 @@ public class SalesView extends Panel implements View {
         form2.addComponent(txtTelefono);
         form2.addComponent(txtCelular);
 
+        
+        return detailsForm;
+
+    }
+    
+    private Component buildEnfermedades() {
+        
+        HorizontalLayout detailsForm = new HorizontalLayout();
+        detailsForm.addStyleName("formulario");
+        detailsForm.setWidth(100.0f, Unit.PERCENTAGE);                      //importante
+        detailsForm.setMargin(new MarginInfo(false, true, true, true));
+        detailsForm.setSpacing(true);
+        
+        FormLayout form1 = new FormLayout();
+        form1.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
+        FormLayout form2 = new FormLayout();
+        form2.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
+        
+        
+        detailsForm.addComponent(form1);
+        detailsForm.addComponent(form2);
+        
+        txAEnfermedades   = util.createTextArea("Enfermedad(s)");
+        txAMedicamento= util.createTextArea("Toma algún medicamento");
+               
+        form1.addComponent(txAEnfermedades);
+        form2.addComponent(txAMedicamento);
+        
+        return detailsForm;
+
+    }
+    
+    private Component buildConsulta() {
+        
+        HorizontalLayout detailsForm = new HorizontalLayout();
+        detailsForm.addStyleName("formulario");
+        detailsForm.setWidth(100.0f, Unit.PERCENTAGE);                      //importante
+        detailsForm.setMargin(new MarginInfo(false, true, true, true));
+        detailsForm.setSpacing(true);
+        
+        FormLayout form1 = new FormLayout();
+        form1.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
+        
+        FormLayout form2 = new FormLayout();
+        form2.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
+        
+        detailsForm.addComponent(form1);
+        detailsForm.addComponent(form2);
+        
+        Date hoy= new Date();
+        SimpleDateFormat sdf= new SimpleDateFormat("dd '-' MMMM '-' yyyy", new Locale("ES"));
+        String fecha = sdf.format(hoy); 
+        System.out.println("fecha = " + fecha);
+        txtNombreCom= util.createTextField("Médico Tratante");
+        txtTelefonoMed  = util.createTextField("Telefono Médico Tratante ");
+        txtMotConsulta   = util.createTextField("Motivo de consulta");
+        txtFechaProceso= util.createTextField("Fecha de Inicio de proceso");
+        txtFechaProceso.setValue(fecha);
+        txtFechaProceso.setEnabled(false);
+        txtContacto= util.createTextField("Contacto de emergencia");
+        txtNombreParent  = util.createTextField("Nombre");
+        txtTelefonoParent  = util.createTextField("Telefono");
+        cmbParentesco  = util.createComboParentesco("Parentesco");
+               
+        form1.addComponent(txtNombreCom);
+        form1.addComponent(txtTelefonoMed);
+        form1.addComponent(txtMotConsulta);
+        form1.addComponent(txtFechaProceso);
+        form2.addComponent(txtContacto);
+        form2.addComponent(txtNombreParent);
+        form2.addComponent(txtTelefonoParent);
+        form2.addComponent(cmbParentesco);
         
         return detailsForm;
 
