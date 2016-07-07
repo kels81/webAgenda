@@ -51,7 +51,7 @@ public class DashboardUtils {
         f.setItemCaption(Boolean.FALSE, "Femenino");
         f.addItem(Boolean.TRUE);
         f.setItemCaption(Boolean.TRUE, "Masculino");
-        f.addStyleName("horizontal");
+        //f.addStyleName("horizontal");
         return f;
     }
     
@@ -64,7 +64,7 @@ public class DashboardUtils {
     
     public ComboBox createComboEstados(String caption) {
         ComboBox cmb = new ComboBox(caption);
-        //cmb.setInputPrompt("");
+        //cmb.setInputPrompt("Seleccione Estado");
         cmb.setNullSelectionAllowed(false);
         cmb.addItems("Aguascalientes","Baja California","Baja California Sur","Campeche",
                      "Chiapas","Chihuahua","Coahuila","Colima","Distrito Federal","Durango",
@@ -74,17 +74,34 @@ public class DashboardUtils {
         return cmb;
     }
     
+    public ComboBox createComboParentesco(String caption) {
+        ComboBox cmb = new ComboBox(caption);
+        //cmb.setInputPrompt("Seleccione Parentesco");
+        cmb.setNullSelectionAllowed(false);
+        cmb.addItems("Mama","Papa","Hijo (a)","Hermano (a)","Tío (a)","Abuelo (a)","Nieto (a)","Esposo (a)",
+                "Primo (a)","Cuñado (a)","Nuera","Yerno","Otro","No Tiene");
+        return cmb;
+    }
+    
     public ComboBox createComboEdoCivil(String caption) {
         ComboBox cmb = new ComboBox(caption);
-        //cmb.setInputPrompt("");
+        //cmb.setInputPrompt("Seleccione Estado Civil");
         cmb.setNullSelectionAllowed(false);
         cmb.addItems("Soltero(a)","Casado(a)","Viudo(a)","Divorciado(a)","Unión Libre","Concubinato");
         return cmb;
     }
     
+    public ComboBox createComboGenero(String caption) {
+        ComboBox cmb = new ComboBox(caption);
+        //cmb.setInputPrompt("Seleccione Género");
+        cmb.setNullSelectionAllowed(false);
+        cmb.addItems("Femenino","Masculino");
+        return cmb;
+    }
+    
     public ComboBox createComboReligion(String caption) {
         ComboBox cmb = new ComboBox(caption);
-        //cmb.setInputPrompt("");
+        //cmb.setInputPrompt("Seleccione Religión");
         cmb.setNullSelectionAllowed(false);
         cmb.addItems("Católica","Protestante","Evangélica","Testigos de Jehová","Adventista","Mormón","Judaísmo","Islámica");
         return cmb;
@@ -92,7 +109,7 @@ public class DashboardUtils {
     
     public ComboBox createComboProfesion(String caption) {
         ComboBox cmb = new ComboBox(caption);
-        //cmb.setInputPrompt("");
+        //cmb.setInputPrompt("Seleccione Profesión");
         cmb.setNullSelectionAllowed(false);
         cmb.addItems("Administrativos","Biología","Comunicaciones","Construcción","Contabilidad",
                      "Creatividad","Producción","Diseño Comercial","Derecho y Leyes","Educación",
