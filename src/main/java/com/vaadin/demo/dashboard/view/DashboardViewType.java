@@ -11,9 +11,9 @@ import com.vaadin.server.Resource;
 
 public enum DashboardViewType {
     DASHBOARD("dashboard", DashboardView.class, FontAwesome.HOME, true), SALES(
-            "ventas", SalesView.class, FontAwesome.BAR_CHART_O, false), TRANSACTIONS(
+            "nuevo paciente", SalesView.class, FontAwesome.USER, false), TRANSACTIONS(
             "transacciones", TransactionsView.class, FontAwesome.TABLE, false), REPORTS(
-            "reportes", ReportsView.class, FontAwesome.FILE_TEXT_O, true), SCHEDULE(
+            "nuevo perfil", ReportsView.class, FontAwesome.EDIT, true), SCHEDULE(
             "agenda", ScheduleView.class, FontAwesome.CALENDAR_O, false);
 
     private final String viewName;
