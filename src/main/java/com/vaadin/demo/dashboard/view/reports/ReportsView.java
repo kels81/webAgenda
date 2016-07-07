@@ -1,255 +1,196 @@
 package com.vaadin.demo.dashboard.view.reports;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import com.google.common.eventbus.Subscribe;
-import com.vaadin.demo.dashboard.event.DashboardEvent.ReportsCountUpdatedEvent;
-import com.vaadin.demo.dashboard.event.DashboardEvent.TransactionReportEvent;
-import com.vaadin.demo.dashboard.event.DashboardEventBus;
-import com.vaadin.demo.dashboard.view.reports.ReportEditor.PaletteItemType;
-import com.vaadin.demo.dashboard.view.reports.ReportEditor.ReportEditorListener;
-import com.vaadin.event.LayoutEvents.LayoutClickEvent;
-import com.vaadin.event.LayoutEvents.LayoutClickListener;
-import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Responsive;
+import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.OptionGroup;
+import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.demo.dashboard.DashboardUtils;
+import com.vaadin.demo.dashboard.event.DashboardEvent;
+import com.vaadin.demo.dashboard.event.DashboardEventBus;
+import com.vaadin.server.Page;
+import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.shared.MouseEventDetails.MouseButton;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.Position;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Image;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TabSheet.CloseHandler;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.ui.Panel;
+
 
 @SuppressWarnings("serial")
-public final class ReportsView extends TabSheet implements View, CloseHandler,
-        ReportEditorListener {
+public class ReportsView extends Panel implements View {
+    public static String CONFIRM_DIALOG_ID;
 
-    public static final String CONFIRM_DIALOG_ID = "confirm-dialog";
+    private final VerticalLayout root;
+
+    private TextField txtNombre;
+    private TextField txtApPaterno;
+    private TextField txtApMaterno;
+    private TextField txtEmail;
+    private TextField txtUsuario;
+    private TextField txtPassword;
+    private TextField txtRepPassword;
+    private ComboBox cmbRol;
+    private OptionGroup rdbGenero;
+    private PopupDateField birthDate;
 
     public ReportsView() {
+        addStyleName(ValoTheme.PANEL_BORDERLESS);
         setSizeFull();
-        addStyleName("reports");
-        addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
-        setCloseHandler(this);
-        DashboardEventBus.register(this);
+        Responsive.makeResponsive(this);    
 
-        addTab(buildDrafts());
+        root = new VerticalLayout();
+        root.addStyleName("form-content");  //importante
+        root.addComponent(buildHeader());
+
+        root.addComponent(buildForm());
+        root.addComponent(buildFooter());
+        
+        setContent(root);
+        Responsive.makeResponsive(root);
     }
 
-    private Component buildDrafts() {
-        final VerticalLayout allDrafts = new VerticalLayout();
-        allDrafts.setSizeFull();
-        allDrafts.setCaption("All Drafts");
+    private Component buildHeader() {
+        VerticalLayout header = new VerticalLayout();
+        header.setMargin(new MarginInfo(true, false, false, true));
+        header.addStyleName("viewheader");
 
-        VerticalLayout titleAndDrafts = new VerticalLayout();
-        titleAndDrafts.setSizeUndefined();
-        titleAndDrafts.setSpacing(true);
-        titleAndDrafts.addStyleName("drafts");
-        allDrafts.addComponent(titleAndDrafts);
-        allDrafts
-                .setComponentAlignment(titleAndDrafts, Alignment.MIDDLE_CENTER);
+        Responsive.makeResponsive(header);
 
-        Label draftsTitle = new Label("Drafts");
-        draftsTitle.addStyleName(ValoTheme.LABEL_H1);
-        draftsTitle.setSizeUndefined();
-        titleAndDrafts.addComponent(draftsTitle);
-        titleAndDrafts.setComponentAlignment(draftsTitle, Alignment.TOP_CENTER);
+        Label titleLabel = new Label("Datos de Perfil");
+        titleLabel.setSizeUndefined();
+        titleLabel.addStyleName(ValoTheme.LABEL_H1);
+        titleLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
 
-        titleAndDrafts.addComponent(buildDraftsList());
+        header.addComponents(titleLabel);
 
-        return allDrafts;
+        return header;
     }
 
-    private Component buildDraftsList() {
-        HorizontalLayout drafts = new HorizontalLayout();
-        drafts.setSpacing(true);
+    private Component buildForm() {
 
-        drafts.addComponent(buildDraftThumb());
-        drafts.addComponent(buildCreateBox());
+        HorizontalLayout root = new HorizontalLayout();
+        //root.setCaption("Perfil");
+        //root.setIcon(FontAwesome.USER);
+        root.setWidth(100.0f, Unit.PERCENTAGE);     //importante
+        root.setSpacing(true);
+        root.setMargin(true);
+        root.addStyleName("profile-form");
 
-        return drafts;
-    }
+        VerticalLayout pic = new VerticalLayout();
+        pic.setSizeUndefined();
+        pic.setSpacing(true);
+        Image profilePic = new Image(null, new ThemeResource(
+                "img/profile-pic-300px.jpg"));
+        profilePic.setWidth(100.0f, Unit.PIXELS);
+        pic.addComponent(profilePic);
 
-    private Component buildDraftThumb() {
-        VerticalLayout draftThumb = new VerticalLayout();
-        draftThumb.setSpacing(true);
-
-        draftThumb.addStyleName("draft-thumb");
-        Image draft = new Image(null, new ThemeResource(
-                "img/draft-report-thumb.png"));
-        draft.setWidth(160.0f, Unit.PIXELS);
-        draft.setHeight(200.0f, Unit.PIXELS);
-        draft.setDescription("Click to edit");
-        draftThumb.addComponent(draft);
-        Label draftTitle = new Label(
-                "Monthly revenue<br><span>Last modified 1 day ago</span>",
-                ContentMode.HTML);
-        draftTitle.setSizeUndefined();
-        draftThumb.addComponent(draftTitle);
-
-        final Button delete = new Button("×");
-        delete.setDescription("Delete draft");
-        delete.setPrimaryStyleName("delete-button");
-        delete.addClickListener(new ClickListener() {
+        Button upload = new Button("Cambiar…", new Button.ClickListener() {
             @Override
-            public void buttonClick(final ClickEvent event) {
+            public void buttonClick(Button.ClickEvent event) {
                 Notification.show("Not implemented in this demo");
             }
         });
-        draftThumb.addComponent(delete);
+        upload.addStyleName(ValoTheme.BUTTON_TINY);
+        pic.addComponent(upload);
 
-        draftThumb.addLayoutClickListener(new LayoutClickListener() {
+        root.addComponent(pic);
+
+        FormLayout details = new FormLayout();
+        details.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
+        root.addComponent(details);
+        root.setExpandRatio(details, 1);
+
+        Label lblSeccion = new Label("Datos Generales");
+        lblSeccion.addStyleName(ValoTheme.LABEL_H4);
+        lblSeccion.addStyleName(ValoTheme.LABEL_COLORED);
+        details.addComponent(lblSeccion);
+
+        txtNombre = new TextField("Nombre");
+        details.addComponent(txtNombre);
+        txtApPaterno = new TextField("Apellido Paterno");
+        details.addComponent(txtApPaterno);
+        txtApMaterno = new TextField("Apellido Materno");
+        details.addComponent(txtApMaterno);
+
+        DashboardUtils util = new DashboardUtils();
+        birthDate = util.createDateField("Fecha Nacimiento");
+        details.addComponent(birthDate);
+
+        rdbGenero = util.createRadioGenero("Género");
+        details.addComponent(rdbGenero);
+
+        Label lblSeccion2 = new Label("Datos Usuario");
+        lblSeccion2.addStyleName(ValoTheme.LABEL_H4);
+        lblSeccion2.addStyleName(ValoTheme.LABEL_COLORED);
+        details.addComponent(lblSeccion2);
+
+        txtUsuario = new TextField("Usuario");
+        details.addComponent(txtUsuario);
+        txtEmail = new TextField("Email");
+        details.addComponent(txtEmail);
+        txtPassword = new TextField("Password");
+        details.addComponent(txtPassword);
+        txtRepPassword = new TextField("Repetir Password");
+        details.addComponent(txtRepPassword);
+        cmbRol = new ComboBox("Rol");
+        cmbRol.addItem("Médico");
+        cmbRol.addItem("Psicólogo");
+        cmbRol.addItem("Nutriólogo");
+        cmbRol.setNullSelectionAllowed(false);
+        details.addComponent(cmbRol);
+        return root;
+    }
+
+    private Component buildFooter() {
+        HorizontalLayout footer = new HorizontalLayout();
+        footer.setWidth(100.0f, Unit.PERCENTAGE);
+        footer.setMargin(new MarginInfo(false, true, true, true));
+
+        Button ok = new Button("OK");
+        ok.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        ok.addClickListener(new Button.ClickListener() {
             @Override
-            public void layoutClick(final LayoutClickEvent event) {
-                if (event.getButton() == MouseButton.LEFT
-                        && event.getChildComponent() != delete) {
-                    addReport(ReportType.MONTHLY, null);
+            public void buttonClick(Button.ClickEvent event) {
+                try {
+                    //fieldGroup.commit();
+                    // Updated user should also be persisted to database. But
+                    // not in this demo.
+
+                    Notification success = new Notification(
+                            "Paciente registrado exitosamente");
+                    success.setDelayMsec(2000);
+                    success.setStyleName("bar success small");
+                    success.setPosition(Position.TOP_CENTER);
+                    success.show(Page.getCurrent());
+
+                    DashboardEventBus.post(new DashboardEvent.ProfileUpdatedEvent());
+                    //close();
+                } catch (Exception e) {
+                    Notification.show("Error while entering profile",
+                            Notification.Type.ERROR_MESSAGE);
                 }
             }
         });
-
-        return draftThumb;
-    }
-
-    private Component buildCreateBox() {
-        VerticalLayout createBox = new VerticalLayout();
-        createBox.setWidth(160.0f, Unit.PIXELS);
-        createBox.setHeight(200.0f, Unit.PIXELS);
-        createBox.addStyleName("create");
-
-        Button create = new Button("Create New");
-        create.addStyleName(ValoTheme.BUTTON_PRIMARY);
-        create.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                addReport(ReportType.EMPTY, null);
-            }
-        });
-
-        createBox.addComponent(create);
-        createBox.setComponentAlignment(create, Alignment.MIDDLE_CENTER);
-        return createBox;
-    }
-
-    public void addReport(final ReportType reportType, final Object prefillData) {
-        ReportEditor reportEditor = new ReportEditor(this);
-        addTab(reportEditor).setClosable(true);
-
-        if (reportType == ReportType.MONTHLY) {
-            reportEditor.setTitle("Monthly revenue");
-            reportEditor.addWidget(PaletteItemType.CHART, null);
-            reportEditor.addWidget(PaletteItemType.TABLE, null);
-        } else if (reportType == ReportType.EMPTY) {
-            DateFormat df = new SimpleDateFormat("M/dd/yyyy");
-            reportEditor.setTitle("Unnamed Report – " + (df.format(new Date()))
-                    + " (" + getComponentCount() + ")");
-        } else if (reportType == ReportType.TRANSACTIONS) {
-            reportEditor
-                    .setTitle("Generated report from selected transactions");
-            reportEditor.addWidget(PaletteItemType.TEXT, "");
-            reportEditor.addWidget(PaletteItemType.TRANSACTIONS, prefillData);
-        }
-
-        DashboardEventBus.post(new ReportsCountUpdatedEvent(
-                getComponentCount() - 1));
-        setSelectedTab(getComponentCount() - 1);
-    }
-
-    @Subscribe
-    public void createTransactionReport(final TransactionReportEvent event) {
-        addReport(ReportType.TRANSACTIONS, event.getTransactions());
-    }
-
-    @Override
-    public void onTabClose(final TabSheet tabsheet, final Component tabContent) {
-        Label message = new Label(
-                "You have not saved this report. Do you want to save or discard any changes you've made to this report?");
-        message.setWidth("25em");
-
-        final Window confirmDialog = new Window("Unsaved Changes");
-        confirmDialog.setId(CONFIRM_DIALOG_ID);
-        confirmDialog.setCloseShortcut(KeyCode.ESCAPE, null);
-        confirmDialog.setModal(true);
-        confirmDialog.setClosable(false);
-        confirmDialog.setResizable(false);
-
-        VerticalLayout root = new VerticalLayout();
-        root.setSpacing(true);
-        root.setMargin(true);
-        confirmDialog.setContent(root);
-
-        HorizontalLayout footer = new HorizontalLayout();
-        footer.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
-        footer.setWidth("100%");
-        footer.setSpacing(true);
-
-        root.addComponents(message, footer);
-
-        Button ok = new Button("Save", new ClickListener() {
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                confirmDialog.close();
-                removeComponent(tabContent);
-                DashboardEventBus.post(new ReportsCountUpdatedEvent(
-                        getComponentCount() - 1));
-                Notification
-                        .show("The report was saved as a draft",
-                                "Actually, the report was just closed and deleted forever. As this is only a demo, it doesn't persist any data.",
-                                Type.TRAY_NOTIFICATION);
-            }
-        });
-        ok.addStyleName(ValoTheme.BUTTON_PRIMARY);
-
-        Button discard = new Button("Discard Changes", new ClickListener() {
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                confirmDialog.close();
-                removeComponent(tabContent);
-                DashboardEventBus.post(new ReportsCountUpdatedEvent(
-                        getComponentCount() - 1));
-            }
-        });
-        discard.addStyleName(ValoTheme.BUTTON_DANGER);
-
-        Button cancel = new Button("Cancel", new ClickListener() {
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                confirmDialog.close();
-            }
-        });
-
-        footer.addComponents(discard, cancel, ok);
-        footer.setExpandRatio(discard, 1);
-
-        getUI().addWindow(confirmDialog);
-        confirmDialog.focus();
+        ok.focus();
+        footer.addComponent(ok);
+        footer.setComponentAlignment(ok, Alignment.TOP_RIGHT);
+        return footer;
     }
 
     @Override
     public void enter(final ViewChangeEvent event) {
     }
 
-    @Override
-    public void titleChanged(final String newTitle, final ReportEditor editor) {
-        getTab(editor).setCaption(newTitle);
     }
-
-    public enum ReportType {
-        MONTHLY, EMPTY, TRANSACTIONS
-    }
-
-}
