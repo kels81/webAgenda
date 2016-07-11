@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.DashboardUI;
+import com.vaadin.demo.dashboard.DashboardUtils;
 import com.vaadin.demo.dashboard.component.MovieDetailsWindow;
 import com.vaadin.demo.dashboard.domain.Movie;
 import com.vaadin.demo.dashboard.domain.Transaction;
@@ -17,6 +18,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.shared.MouseEventDetails.MouseButton;
@@ -34,25 +36,47 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.BackwardEvent;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventResize;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.ForwardEvent;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.MoveEvent;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectEvent;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
+import com.vaadin.ui.components.calendar.handler.BasicBackwardHandler;
+import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
 import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
 import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
+import com.vaadin.ui.components.calendar.handler.BasicForwardHandler;
 import com.vaadin.ui.themes.ValoTheme;
+import java.text.DateFormatSymbols;
+import java.util.GregorianCalendar;
 
 @SuppressWarnings("serial")
 public final class ScheduleView extends CssLayout implements View {
 
-    private Calendar calendar;
-    private final Component tray;
+    private final DashboardUtils util = new DashboardUtils();
 
+    private Calendar calendar;
+    private GregorianCalendar gregorian;
+    private final Component tray;
+    private Button nextButton;
+    private Button prevButton;
+    private Button dayButton;
+    private Button weekButton;
+    private Button monthButton;
+    private final Label captionLabel = new Label("");
+
+    private Date currentMonthsFirstDate;
+
+    /*private enum Mode {
+     MONTH, WEEK, DAY;
+     }*/
     public ScheduleView() {
         setSizeFull();
         addStyleName("schedule");
@@ -70,7 +94,7 @@ public final class ScheduleView extends CssLayout implements View {
         tray = buildTray();
         addComponent(tray);
 
-        //injectMovieCoverStyles();
+        injectMovieCoverStyles();
     }
 
     @Override
@@ -109,52 +133,88 @@ public final class ScheduleView extends CssLayout implements View {
         calendarLayout.setMargin(true);
 
         HorizontalLayout hori = new HorizontalLayout();
-        Button ok = new Button("DÍA");  
-        ok.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-               
-            }
-        });
-        
-        Button sem = new Button("SEMANA");
-        sem.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-               java.util.Calendar initialView = java.util.Calendar.getInstance();
-        initialView.add(java.util.Calendar.DAY_OF_WEEK,
-                -initialView.get(java.util.Calendar.DAY_OF_WEEK) + 1);
-        calendar.setStartDate(initialView.getTime());
+        hori.setWidth("100%");
+        hori.setSpacing(true);
 
-        initialView.add(java.util.Calendar.DAY_OF_WEEK, 6);
-        calendar.setEndDate(initialView.getTime());
+        prevButton = new Button("Prev", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                handlePreviousButtonClick();
             }
         });
-        
-        Button mes = new Button("MES");
-        mes.addClickListener(new Button.ClickListener() {
+
+        nextButton = new Button("Next", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                handleNextButtonClick();
+            }
+        });
+
+        dayButton = new Button("DÍA", new ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-               java.util.Calendar initialView = java.util.Calendar.getInstance();
-                initialView.add(java.util.Calendar.DAY_OF_WEEK_IN_MONTH,
-                -initialView.get(java.util.Calendar.DAY_OF_WEEK_IN_MONTH) + 0);
+                BasicDateClickHandler handler = (BasicDateClickHandler) calendar
+                        .getHandler(CalendarComponentEvents.DateClickEvent.EVENT_ID);
+                handler.dateClick(new CalendarComponentEvents.DateClickEvent(calendar,
+                        new GregorianCalendar().getTime()));
+            }
+        });
+
+        weekButton = new Button("SEMANA", new ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                java.util.Calendar initialView = java.util.Calendar.getInstance();
+                initialView.add(java.util.Calendar.DAY_OF_WEEK,
+                        -initialView.get(java.util.Calendar.DAY_OF_WEEK) + 2);
                 calendar.setStartDate(initialView.getTime());
 
-                initialView.add(java.util.Calendar.DAY_OF_WEEK_IN_MONTH, 4);
+                initialView.add(java.util.Calendar.DAY_OF_WEEK, 6);
                 calendar.setEndDate(initialView.getTime());
             }
         });
-        
-        hori.addComponent(ok);
-        hori.addComponent(sem);
-        hori.addComponent(mes);
+
+        monthButton = new Button("MES", new ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                switchToMonthView();
+            }
+        });
+
+        prevButton.addStyleName(ValoTheme.BUTTON_TINY);
+        prevButton.addStyleName("borderless-colored");
+        prevButton.setIcon(FontAwesome.ANGLE_LEFT);
+        nextButton.addStyleName(ValoTheme.BUTTON_TINY);
+        nextButton.addStyleName("borderless-colored");
+        nextButton.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
+        nextButton.setIcon(FontAwesome.ANGLE_RIGHT);
+
+        dayButton.addStyleName(ValoTheme.BUTTON_TINY);
+        weekButton.addStyleName(ValoTheme.BUTTON_TINY);
+        monthButton.addStyleName(ValoTheme.BUTTON_TINY);
+
+        hori.addComponent(prevButton);
+        hori.addComponent(captionLabel);
+        hori.addComponent(nextButton);
+
+        CssLayout group = new CssLayout();
+        group.addStyleName("v-component-group");
+        group.addComponent(dayButton);
+        group.addComponent(weekButton);
+        group.addComponent(monthButton);
+        //hori.addComponent(group);
+
+        hori.addComponent(nextButton);
+        hori.setComponentAlignment(prevButton, Alignment.MIDDLE_LEFT);
+        hori.setComponentAlignment(captionLabel, Alignment.MIDDLE_CENTER);
+        //hori.setComponentAlignment(group, Alignment.MIDDLE_CENTER);
+        hori.setComponentAlignment(nextButton, Alignment.MIDDLE_RIGHT);
+
         calendarLayout.addComponent(hori);
-        
+
         calendar = new Calendar(new MovieEventProvider());
         calendar.setWidth(100.0f, Unit.PERCENTAGE);
         calendar.setHeight(1000.0f, Unit.PIXELS);
         calendar.setWeeklyCaptionFormat("dd MMM yyyy");
-        
 
         //MANEJAR EL CLICK SOBRE UN EVENTO YA AGENDADO
         calendar.setHandler(new EventClickHandler() {
@@ -190,8 +250,7 @@ public final class ScheduleView extends CssLayout implements View {
                 }
             }
 
-            protected void setDates(final MovieEvent event, final Date start,
-                    final Date end) {
+            protected void setDates(final MovieEvent event, final Date start, final Date end) {
                 event.start = start;
                 event.end = end;
             }
@@ -199,13 +258,12 @@ public final class ScheduleView extends CssLayout implements View {
         calendar.setHandler(new BasicEventResizeHandler() {
             @Override
             public void eventResize(final EventResize event) {
-                Notification.show("You're not allowed to change the movie duration");                
+                Notification.show("You're not allowed to change the movie duration");
             }
         });
 
         //MANEJAR SELECCION DE HORAS EN EL CALENDARIO
         calendar.setHandler(new RangeSelectHandler() {
-
             @Override
             public void rangeSelect(final RangeSelectEvent event) {
                 //Notification.show("Has seleccionado una fecha: " + event.getStart() + " " + event.getEnd());
@@ -214,13 +272,73 @@ public final class ScheduleView extends CssLayout implements View {
             }
         });
 
-        java.util.Calendar initialView = java.util.Calendar.getInstance();
-        initialView.add(java.util.Calendar.DAY_OF_WEEK,
-                -initialView.get(java.util.Calendar.DAY_OF_WEEK) + 1);
-        calendar.setStartDate(initialView.getTime());
+        //MANEJAR CLICK EN EL ENCABEZADO DE LA FECHA EN WEEK-VIEW Y MONTH-VIEW
+        calendar.setHandler(new BasicDateClickHandler() {
+            @Override
+            public void dateClick(DateClickEvent event) {
 
-        initialView.add(java.util.Calendar.DAY_OF_WEEK, 6);
-        calendar.setEndDate(initialView.getTime());
+                updateCaptionLabel(event);
+                /*Date clickedDate = event.getDate();
+                 java.util.Calendar cal = event.getComponent().getInternalCalendar();
+                 cal.setTime(clickedDate);
+                 DateFormatSymbols s = new DateFormatSymbols();
+                 String month = s.getShortMonths()[cal.get(GregorianCalendar.MONTH)];
+                 String prevMonth = s.getShortMonths()[cal.get(GregorianCalendar.MONTH) - 1];
+                 String nextMonth = s.getShortMonths()[cal.get(GregorianCalendar.MONTH) + 1];
+                 captionLabel.setValue(month.toUpperCase() + " " + gregorian.get(GregorianCalendar.YEAR));
+                 captionLabel.addStyleName(ValoTheme.LABEL_H3);
+                 captionLabel.addStyleName(ValoTheme.LABEL_COLORED);
+                 prevButton.setCaption(prevMonth.toUpperCase());
+                 nextButton.setCaption(nextMonth.toUpperCase());*/
+
+                //Notification.show("Has seleccionado una fecha: " + event.getDate());
+                //DEFAULT BEHAVIOR
+                super.dateClick(event);
+            }
+        });
+
+        //MANEJAR CLICK FLECHAS EN BACK Y FORWARD EN EL ENCABEZADO DE LA FECHA EN WEEK-VIEW Y DAY-VIEW
+        calendar.setHandler(new BasicBackwardHandler() {
+            @Override
+            protected void setDates(BackwardEvent event, Date start, Date end) {
+
+                java.util.Calendar calendar = event.getComponent().getInternalCalendar();
+                if (!isThisMonth(calendar, start) && !isThisMonth(calendar, end)) {
+                    event.getComponent().setStartDate(start);
+                    event.getComponent().setEndDate(end);
+                    updateCaptionLabel(event);
+                }
+            }
+        });
+        
+        calendar.setHandler(new BasicForwardHandler() {
+            @Override
+            protected void setDates(ForwardEvent event, Date start, Date end) {
+
+                java.util.Calendar calendar = event.getComponent().getInternalCalendar();
+                if (!isThisMonth(calendar, start) && !isThisMonth(calendar, end)) {
+         //super.setDates(event, start, end);
+                    //} 
+                    //else {
+
+                    event.getComponent().setStartDate(start);
+                    event.getComponent().setEndDate(end);
+                    updateCaptionLabel(event);
+                }
+            }
+        });
+        //VISTA A MOSTRAR CUANDO SE INICIA 
+        //VISTA SEMANA
+        /*java.util.Calendar initialView = java.util.Calendar.getInstance();
+         initialView.add(java.util.Calendar.DAY_OF_WEEK,
+         -initialView.get(java.util.Calendar.DAY_OF_WEEK) + 1);
+         calendar.setStartDate(initialView.getTime());
+
+         initialView.add(java.util.Calendar.DAY_OF_WEEK, 6);
+         calendar.setEndDate(initialView.getTime());*/
+        //VISTA MES
+        switchToMonthView();
+        updateCaptionLabel();
 
         return calendarLayout;
     }
@@ -401,4 +519,125 @@ public final class ScheduleView extends CssLayout implements View {
 
     }
 
+    private void handlePreviousButtonClick() {
+        previousMonth();
+    }
+
+    private void handleNextButtonClick() {
+        nextMonth();
+    }
+
+    private void previousMonth() {
+        rollMonth(-1);
+    }
+
+    private void nextMonth() {
+        rollMonth(1);
+    }
+
+    private void rollMonth(int direction) {
+
+        int rollAmount = gregorian.get(GregorianCalendar.DAY_OF_MONTH) - 1;
+        gregorian.add(GregorianCalendar.DAY_OF_MONTH, -rollAmount);
+        currentMonthsFirstDate = gregorian.getTime();
+
+        gregorian.setTime(currentMonthsFirstDate);
+        gregorian.add(GregorianCalendar.MONTH, direction);
+
+        currentMonthsFirstDate = gregorian.getTime();
+        calendar.setStartDate(currentMonthsFirstDate);
+
+        updateCaptionLabel();
+        gregorian.add(GregorianCalendar.MONTH, 1);
+        gregorian.add(GregorianCalendar.DATE, -1);
+        calendar.setEndDate(gregorian.getTime());
+    }
+
+    private void updateCaptionLabel() {
+        DateFormatSymbols s = new DateFormatSymbols();
+        String month = s.getShortMonths()[gregorian.get(GregorianCalendar.MONTH)];
+        int idxPrevMonth = gregorian.get(GregorianCalendar.MONTH) != 0 ? gregorian.get(GregorianCalendar.MONTH) - 1 : 11;       //0=Enero
+        int idxNextMonth = gregorian.get(GregorianCalendar.MONTH) != 11 ? gregorian.get(GregorianCalendar.MONTH) + 1 : 0;;      //11=Diciembre
+        String prevMonth = s.getShortMonths()[idxPrevMonth];
+        String nextMonth = s.getShortMonths()[idxNextMonth];
+        captionLabel.setValue(month.toUpperCase() + " " + gregorian.get(GregorianCalendar.YEAR));
+        captionLabel.addStyleName(ValoTheme.LABEL_H3);
+        captionLabel.addStyleName(ValoTheme.LABEL_COLORED);
+        prevButton.setCaption(prevMonth.toUpperCase());
+        nextButton.setCaption(nextMonth.toUpperCase());
+    }
+
+    private void updateCaptionLabel(BackwardEvent event) {
+        java.util.Calendar cal = event.getComponent().getInternalCalendar();
+        updateLabelMonth(cal);
+    }
+
+    private void updateCaptionLabel(ForwardEvent event) {
+        java.util.Calendar cal = event.getComponent().getInternalCalendar();
+        updateLabelMonth(cal);
+    }
+
+    private void updateCaptionLabel(DateClickEvent event) {
+        Date clickedDate = event.getDate();
+        java.util.Calendar cal = event.getComponent().getInternalCalendar();
+        cal.setTime(clickedDate);
+        updateLabelMonth(cal);
+    }
+
+    public void updateLabelMonth(java.util.Calendar cal) {
+        DateFormatSymbols s = new DateFormatSymbols();
+        String month = s.getShortMonths()[cal.get(GregorianCalendar.MONTH)];
+        int idxPrevMonth = cal.get(GregorianCalendar.MONTH) != 0 ? cal.get(GregorianCalendar.MONTH) - 1 : 11;       //0=Enero
+        int idxNextMonth = cal.get(GregorianCalendar.MONTH) != 11 ? cal.get(GregorianCalendar.MONTH) + 1 : 0;;      //11=Diciembre
+        String prevMonth = s.getShortMonths()[idxPrevMonth];
+        String nextMonth = s.getShortMonths()[idxNextMonth];
+        captionLabel.setValue(month.toUpperCase() + " " + cal.get(GregorianCalendar.YEAR));
+        captionLabel.addStyleName(ValoTheme.LABEL_H3);
+        captionLabel.addStyleName(ValoTheme.LABEL_COLORED);
+        prevButton.setCaption(prevMonth.toUpperCase());
+        nextButton.setCaption(nextMonth.toUpperCase());
+    }
+
+    public void switchToMonthView() {
+        /**
+         * LAS SIGUIENTES LINEAS SON PARA CONOCER LA FECHA ACTUAL Y CON ESTA
+         * FECHA PODER MOSTRAR EL MES ACTUAL
+         */
+        Date today = new Date();
+        gregorian = new GregorianCalendar();
+        gregorian.setTime(today);
+        calendar.getInternalCalendar().setTime(today);
+
+        /**
+         * Calendar getStartDate (and getEndDate) has some strange logic which
+         * returns Monday of the current internal time if no start date has been
+         * set
+         */
+        calendar.setStartDate(calendar.getStartDate());
+        calendar.setEndDate(calendar.getEndDate());
+
+        int rollAmount = gregorian.get(GregorianCalendar.DAY_OF_MONTH) - 1;
+        gregorian.add(GregorianCalendar.DAY_OF_MONTH, -rollAmount);
+
+        calendar.setStartDate(gregorian.getTime());
+
+        gregorian.add(GregorianCalendar.MONTH, 1);
+        gregorian.add(GregorianCalendar.DATE, -1);
+
+        calendar.setEndDate(gregorian.getTime());
+    }
+
+    public static boolean isThisYear(java.util.Calendar calendar, Date date) {
+        calendar.setTime(new Date());
+        int thisYear = calendar.get(java.util.Calendar.YEAR);
+        calendar.setTime(date);
+        return calendar.get(java.util.Calendar.YEAR) == thisYear;
+    }
+
+    public static boolean isThisMonth(java.util.Calendar calendar, Date date) {
+        calendar.setTime(new Date());
+        int thisMonth = calendar.get(java.util.Calendar.MONTH);
+        calendar.setTime(date);
+        return calendar.get(java.util.Calendar.MONTH) == thisMonth;
+    }
 }
