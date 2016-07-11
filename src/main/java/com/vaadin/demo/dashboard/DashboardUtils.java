@@ -13,6 +13,9 @@ import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  *
@@ -118,6 +121,22 @@ public class DashboardUtils {
                      "Sector Salud","Seguro y Reaseguro","Tecnología de la Información / Sistemas","Turismo","Hospitalidad y Gastronomía",
                      "Ventas","Veterinaria / Zoologia");
         return cmb;
+    }
+    
+    public String getMonth() {
+        String month = "";
+        Date today = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM yyyy");
+        month = sdf.format(today);
+        return month;
+    }
+    
+    public String getToday() {
+        String day = "";
+        Date today = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+        day = sdf.format(today);
+        return day;
     }
     
 }
