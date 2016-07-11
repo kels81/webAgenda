@@ -319,14 +319,6 @@ public final class MovieDetailsWindow extends Window {
         w.focus();
     }
 
-    private DateField createDateField(String caption) {
-        DateField f = new DateField(caption);
-
-        f.setResolution(Resolution.MINUTE);
-
-        return f;
-    }
-
     private String setUpperMonth(Date date) {
         String upperMonth = "";
         SimpleDateFormat df = new SimpleDateFormat();
