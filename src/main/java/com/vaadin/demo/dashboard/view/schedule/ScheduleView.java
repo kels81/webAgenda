@@ -131,19 +131,22 @@ public final class ScheduleView extends CssLayout implements View {
         VerticalLayout calendarLayout = new VerticalLayout();
         calendarLayout.setCaption("Calendario");
         calendarLayout.setMargin(true);
+        //calendarLayout.setSpacing(true);
+        calendarLayout.setSizeFull();
 
+        
         HorizontalLayout hori = new HorizontalLayout();
-        hori.setWidth("100%");
+        hori.setWidth(100.0f, Unit.PERCENTAGE);
         hori.setSpacing(true);
 
-        prevButton = new Button("Prev", new Button.ClickListener() {
+        prevButton = new Button("Prev", new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 handlePreviousButtonClick();
             }
         });
 
-        nextButton = new Button("Next", new Button.ClickListener() {
+        nextButton = new Button("Next", new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 handleNextButtonClick();
@@ -188,145 +191,48 @@ public final class ScheduleView extends CssLayout implements View {
         nextButton.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
         nextButton.setIcon(FontAwesome.ANGLE_RIGHT);
 
-        dayButton.addStyleName(ValoTheme.BUTTON_TINY);
-        weekButton.addStyleName(ValoTheme.BUTTON_TINY);
-        monthButton.addStyleName(ValoTheme.BUTTON_TINY);
-
+        //dayButton.addStyleName(ValoTheme.BUTTON_TINY);
+        //weekButton.addStyleName(ValoTheme.BUTTON_TINY);
+        //monthButton.addStyleName(ValoTheme.BUTTON_SMALL);
+        //monthButton.addStyleName("borderless-colored");
+        
+        captionLabel.addStyleName(ValoTheme.LABEL_H4);
+        captionLabel.addStyleName(ValoTheme.LABEL_COLORED);
+        
         hori.addComponent(prevButton);
         hori.addComponent(captionLabel);
+        //hori.addComponent(monthButton);
         hori.addComponent(nextButton);
 
-        CssLayout group = new CssLayout();
-        group.addStyleName("v-component-group");
-        group.addComponent(dayButton);
-        group.addComponent(weekButton);
-        group.addComponent(monthButton);
+        //CssLayout group = new CssLayout();
+        //group.addStyleName("v-component-group");
+        //group.addComponent(dayButton);
+        //group.addComponent(weekButton);
+        //group.addComponent(monthButton);
         //hori.addComponent(group);
 
-        hori.addComponent(nextButton);
+        
         hori.setComponentAlignment(prevButton, Alignment.MIDDLE_LEFT);
         hori.setComponentAlignment(captionLabel, Alignment.MIDDLE_CENTER);
+        //hori.setComponentAlignment(monthButton, Alignment.MIDDLE_CENTER);
         //hori.setComponentAlignment(group, Alignment.MIDDLE_CENTER);
         hori.setComponentAlignment(nextButton, Alignment.MIDDLE_RIGHT);
 
+        
         calendarLayout.addComponent(hori);
 
         calendar = new Calendar(new MovieEventProvider());
-        calendar.setWidth(100.0f, Unit.PERCENTAGE);
-        calendar.setHeight(1000.0f, Unit.PIXELS);
+        calendar.setSizeFull();
         calendar.setWeeklyCaptionFormat("dd MMM yyyy");
-
-        //MANEJAR EL CLICK SOBRE UN EVENTO YA AGENDADO
-        calendar.setHandler(new EventClickHandler() {
-            @Override
-            public void eventClick(final EventClick event) {
-                setTrayVisible(false);
-                MovieEvent movieEvent = (MovieEvent) event.getCalendarEvent();
-                MovieDetailsWindow.open(movieEvent.getStart(), movieEvent.getEnd(), false);
-            }
-        });
-
-        calendarLayout.addComponent(calendar);
-
         calendar.setFirstVisibleHourOfDay(9);       //PRIMER HORA DEL DIA
         calendar.setLastVisibleHourOfDay(22);       //ULTIMA HORA DEL DIA
-
-        //MANEJAR CLICK CUANDO ARRASTRAS UN EVENTO A OTRO HORARIO
-        calendar.setHandler(new BasicEventMoveHandler() {
-            @Override
-            public void eventMove(final MoveEvent event) {
-                CalendarEvent calendarEvent = event.getCalendarEvent();
-                if (calendarEvent instanceof MovieEvent) {
-                    MovieEvent editableEvent = (MovieEvent) calendarEvent;
-
-                    Date newFromTime = event.getNewStart();
-
-                    // Update event dates
-                    long length = editableEvent.getEnd().getTime()
-                            - editableEvent.getStart().getTime();
-                    setDates(editableEvent, newFromTime,
-                            new Date(newFromTime.getTime() + length));
-                    setTrayVisible(true);
-                }
-            }
-
-            protected void setDates(final MovieEvent event, final Date start, final Date end) {
-                event.start = start;
-                event.end = end;
-            }
-        });
-        calendar.setHandler(new BasicEventResizeHandler() {
-            @Override
-            public void eventResize(final EventResize event) {
-                Notification.show("You're not allowed to change the movie duration");
-            }
-        });
-
-        //MANEJAR SELECCION DE HORAS EN EL CALENDARIO
-        calendar.setHandler(new RangeSelectHandler() {
-            @Override
-            public void rangeSelect(final RangeSelectEvent event) {
-                //Notification.show("Has seleccionado una fecha: " + event.getStart() + " " + event.getEnd());
-                setTrayVisible(false);
-                MovieDetailsWindow.open(event.getStart(), event.getEnd(), true);
-            }
-        });
-
-        //MANEJAR CLICK EN EL ENCABEZADO DE LA FECHA EN WEEK-VIEW Y MONTH-VIEW
-        calendar.setHandler(new BasicDateClickHandler() {
-            @Override
-            public void dateClick(DateClickEvent event) {
-
-                updateCaptionLabel(event);
-                /*Date clickedDate = event.getDate();
-                 java.util.Calendar cal = event.getComponent().getInternalCalendar();
-                 cal.setTime(clickedDate);
-                 DateFormatSymbols s = new DateFormatSymbols();
-                 String month = s.getShortMonths()[cal.get(GregorianCalendar.MONTH)];
-                 String prevMonth = s.getShortMonths()[cal.get(GregorianCalendar.MONTH) - 1];
-                 String nextMonth = s.getShortMonths()[cal.get(GregorianCalendar.MONTH) + 1];
-                 captionLabel.setValue(month.toUpperCase() + " " + gregorian.get(GregorianCalendar.YEAR));
-                 captionLabel.addStyleName(ValoTheme.LABEL_H3);
-                 captionLabel.addStyleName(ValoTheme.LABEL_COLORED);
-                 prevButton.setCaption(prevMonth.toUpperCase());
-                 nextButton.setCaption(nextMonth.toUpperCase());*/
-
-                //Notification.show("Has seleccionado una fecha: " + event.getDate());
-                //DEFAULT BEHAVIOR
-                super.dateClick(event);
-            }
-        });
-
-        //MANEJAR CLICK FLECHAS EN BACK Y FORWARD EN EL ENCABEZADO DE LA FECHA EN WEEK-VIEW Y DAY-VIEW
-        calendar.setHandler(new BasicBackwardHandler() {
-            @Override
-            protected void setDates(BackwardEvent event, Date start, Date end) {
-
-                java.util.Calendar calendar = event.getComponent().getInternalCalendar();
-                if (!isThisMonth(calendar, start) && !isThisMonth(calendar, end)) {
-                    event.getComponent().setStartDate(start);
-                    event.getComponent().setEndDate(end);
-                    updateCaptionLabel(event);
-                }
-            }
-        });
         
-        calendar.setHandler(new BasicForwardHandler() {
-            @Override
-            protected void setDates(ForwardEvent event, Date start, Date end) {
+        calendarLayout.addComponent(calendar);
+        calendarLayout.setExpandRatio(calendar, 1.0f);
 
-                java.util.Calendar calendar = event.getComponent().getInternalCalendar();
-                if (!isThisMonth(calendar, start) && !isThisMonth(calendar, end)) {
-         //super.setDates(event, start, end);
-                    //} 
-                    //else {
+        
 
-                    event.getComponent().setStartDate(start);
-                    event.getComponent().setEndDate(end);
-                    updateCaptionLabel(event);
-                }
-            }
-        });
+        setHandlers();
         //VISTA A MOSTRAR CUANDO SE INICIA 
         //VISTA SEMANA
         /*java.util.Calendar initialView = java.util.Calendar.getInstance();
@@ -435,6 +341,90 @@ public final class ScheduleView extends CssLayout implements View {
 
     @Override
     public void enter(final ViewChangeEvent event) {
+    }
+
+    private void setHandlers() {
+        //MANEJAR EL CLICK SOBRE UN EVENTO YA AGENDADO
+        calendar.setHandler(new EventClickHandler() {
+            @Override
+            public void eventClick(final EventClick event) {
+                setTrayVisible(false);
+                MovieEvent movieEvent = (MovieEvent) event.getCalendarEvent();
+                MovieDetailsWindow.open(movieEvent.getStart(), movieEvent.getEnd(), false);
+            }
+        });
+
+        //MANEJAR CLICK CUANDO ARRASTRAS UN EVENTO A OTRO HORARIO
+        calendar.setHandler(new BasicEventMoveHandler() {
+            @Override
+            public void eventMove(final MoveEvent event) {
+                CalendarEvent calendarEvent = event.getCalendarEvent();
+                if (calendarEvent instanceof MovieEvent) {
+                    MovieEvent editableEvent = (MovieEvent) calendarEvent;
+
+                    Date newFromTime = event.getNewStart();
+
+                    // Update event dates
+                    long length = editableEvent.getEnd().getTime()
+                            - editableEvent.getStart().getTime();
+                    setDates(editableEvent, newFromTime,
+                            new Date(newFromTime.getTime() + length));
+                    setTrayVisible(true);
+                }
+            }
+
+            protected void setDates(final MovieEvent event, final Date start, final Date end) {
+                event.start = start;
+                event.end = end;
+            }
+        });
+
+        calendar.setHandler(new BasicEventResizeHandler() {
+            @Override
+            public void eventResize(final EventResize event) {
+                Notification.show("You're not allowed to change the movie duration");
+            }
+        });
+
+        //MANEJAR SELECCION DE HORAS EN EL CALENDARIO
+        calendar.setHandler(new RangeSelectHandler() {
+            @Override
+            public void rangeSelect(final RangeSelectEvent event) {
+                //Notification.show("Has seleccionado una fecha: " + event.getStart() + " " + event.getEnd());
+                setTrayVisible(false);
+                MovieDetailsWindow.open(event.getStart(), event.getEnd(), true);
+            }
+        });
+
+        //MANEJAR CLICK EN EL ENCABEZADO DE LA FECHA EN WEEK-VIEW Y MONTH-VIEW
+        calendar.setHandler(new BasicDateClickHandler() {
+            @Override
+            public void dateClick(DateClickEvent event) {
+                updateCaptionLabel(event);
+                //Notification.show("Has seleccionado una fecha: " + event.getDate());
+                //DEFAULT BEHAVIOR
+                super.dateClick(event);
+            }
+        });
+
+        //MANEJAR CLICK FLECHAS EN BACK Y FORWARD EN EL ENCABEZADO DE LA FECHA EN WEEK-VIEW Y DAY-VIEW
+        calendar.setHandler(new BasicBackwardHandler() {
+            @Override
+            protected void setDates(BackwardEvent event, Date start, Date end) {
+                event.getComponent().setStartDate(start);
+                event.getComponent().setEndDate(end);
+                updateCaptionLabel(event);
+            }
+        });
+
+        calendar.setHandler(new BasicForwardHandler() {
+            @Override
+            protected void setDates(ForwardEvent event, Date start, Date end) {
+                event.getComponent().setStartDate(start);
+                event.getComponent().setEndDate(end);
+                updateCaptionLabel(event);
+            }
+        });
     }
 
     private class MovieEventProvider implements CalendarEventProvider {
@@ -560,20 +550,21 @@ public final class ScheduleView extends CssLayout implements View {
         int idxNextMonth = gregorian.get(GregorianCalendar.MONTH) != 11 ? gregorian.get(GregorianCalendar.MONTH) + 1 : 0;;      //11=Diciembre
         String prevMonth = s.getShortMonths()[idxPrevMonth];
         String nextMonth = s.getShortMonths()[idxNextMonth];
+        //monthButton.setCaption(month.toUpperCase() + " " + gregorian.get(GregorianCalendar.YEAR));
         captionLabel.setValue(month.toUpperCase() + " " + gregorian.get(GregorianCalendar.YEAR));
-        captionLabel.addStyleName(ValoTheme.LABEL_H3);
-        captionLabel.addStyleName(ValoTheme.LABEL_COLORED);
         prevButton.setCaption(prevMonth.toUpperCase());
         nextButton.setCaption(nextMonth.toUpperCase());
     }
 
     private void updateCaptionLabel(BackwardEvent event) {
         java.util.Calendar cal = event.getComponent().getInternalCalendar();
+        cal.setTime(event.getComponent().getStartDate());       //SE PUEDE USAR StartDate o EndDate
         updateLabelMonth(cal);
     }
 
     private void updateCaptionLabel(ForwardEvent event) {
         java.util.Calendar cal = event.getComponent().getInternalCalendar();
+        cal.setTime(event.getComponent().getStartDate());       //SE PUEDE USAR StartDate o EndDate
         updateLabelMonth(cal);
     }
 
@@ -591,9 +582,8 @@ public final class ScheduleView extends CssLayout implements View {
         int idxNextMonth = cal.get(GregorianCalendar.MONTH) != 11 ? cal.get(GregorianCalendar.MONTH) + 1 : 0;;      //11=Diciembre
         String prevMonth = s.getShortMonths()[idxPrevMonth];
         String nextMonth = s.getShortMonths()[idxNextMonth];
+        //monthButton.setCaption(month.toUpperCase() + " " + cal.get(GregorianCalendar.YEAR));
         captionLabel.setValue(month.toUpperCase() + " " + cal.get(GregorianCalendar.YEAR));
-        captionLabel.addStyleName(ValoTheme.LABEL_H3);
-        captionLabel.addStyleName(ValoTheme.LABEL_COLORED);
         prevButton.setCaption(prevMonth.toUpperCase());
         nextButton.setCaption(nextMonth.toUpperCase());
     }
