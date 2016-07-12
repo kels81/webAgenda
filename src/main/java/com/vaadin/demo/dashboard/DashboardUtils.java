@@ -38,6 +38,7 @@ public class DashboardUtils {
     public TextArea createTextArea(String caption) {
         TextArea f = new TextArea(caption);
         f.setNullRepresentation("");
+        f.setRows(3);
         return f;
     }
     
