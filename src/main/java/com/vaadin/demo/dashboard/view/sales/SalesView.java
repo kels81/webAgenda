@@ -74,9 +74,10 @@ public class SalesView extends Panel implements View {
         root.addComponent(buildHeader());
        
         root.addComponent(buildForm());
-        root.addComponent(buildEnfermedades());
         root.addComponent(buildConsulta());
+        root.addComponent(buildEnfermedades());
         root.addComponent(buildFooter());
+
         
         setContent(root);
         Responsive.makeResponsive(root);
@@ -173,8 +174,10 @@ public class SalesView extends Panel implements View {
         detailsForm.addComponent(form2);
         
         txAEnfermedades   = util.createTextArea("Enfermedad(s)");
-        txAMedicamento= util.createTextArea("Toma algún medicamento");
-               
+        txAEnfermedades.addStyleName("notes");
+        txAMedicamento = util.createTextArea("Toma algún medicamento");
+        txAMedicamento.addStyleName("color1");
+                               
         form1.addComponent(txAEnfermedades);
         form2.addComponent(txAMedicamento);
         
@@ -199,15 +202,11 @@ public class SalesView extends Panel implements View {
         detailsForm.addComponent(form1);
         detailsForm.addComponent(form2);
         
-        Date hoy= new Date();
-        SimpleDateFormat sdf= new SimpleDateFormat("dd '-' MMMM '-' yyyy", new Locale("ES"));
-        String fecha = sdf.format(hoy); 
-        System.out.println("fecha = " + fecha);
         txtNombreCom= util.createTextField("Médico Tratante");
         txtTelefonoMed  = util.createTextField("Telefono Médico Tratante ");
         txtMotConsulta   = util.createTextField("Motivo de consulta");
         txtFechaProceso= util.createTextField("Fecha de Inicio de proceso");
-        txtFechaProceso.setValue(fecha);
+        txtFechaProceso.setValue(util.getToday());
         txtFechaProceso.setEnabled(false);
         txtContacto= util.createTextField("Contacto de emergencia");
         txtNombreParent  = util.createTextField("Nombre");
