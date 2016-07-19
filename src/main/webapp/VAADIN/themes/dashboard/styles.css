@@ -11008,51 +11008,6 @@ div.v-layout.v-horizontal.v-widget {
 	height: auto !important;
 }
 
-.dashboard .form-content {
-	max-height: 480px;
-	max-width: 100%;
-	overflow: visible;
-}
-
-.dashboard .form-content .v-horizontallayout {
-	white-space: normal !important;
-}
-
-.dashboard .form-content[width-range~="0-700px"] .formulario > .v-expand {
-	padding-left: 0 !important;
-}
-
-.dashboard .form-content[width-range~="0-700px"] .formulario > .v-expand  > .v-slot {
-	display: block;
-	margin-left: 0 !important;
-	width: 100% !important;
-}
-
-.dashboard .form-content[width-range~="0-700px"] .formulario > .v-expand  > .v-spacing {
-	height: 12px;
-}
-
-.dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-captioncell, .dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-errorcell, .dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-contentcell {
-	display: inline-block;
-	height: auto;
-}
-
-.dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-captioncell, .dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-errorcell {
-	border-bottom: none;
-	line-height: 1;
-	padding-left: 0;
-	padding-top: 12px;
-	text-align: left;
-}
-
-.dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-caption-h4 {
-	height: 0;
-}
-
-.dashboard .form-content[width-range~="0-600px"] .v-formlayout > table > tbody .v-label-h4 {
-	position: static;
-}
-
 .dashboard .moviedetailswindow {
 	max-height: 480px;
 	width: 720px;
@@ -11289,6 +11244,10 @@ div.v-layout.v-horizontal.v-widget {
 
 .dashboard .v-formlayout.light > table > tbody > [class*="lastrow"] > td {
 	border-bottom: 1px solid #eaeaea;
+}
+
+.dashboard .v-caption-blue-caption {
+	color: #197de1;
 }
 
 .dashboard .loginview {
@@ -11705,59 +11664,158 @@ div.v-layout.v-horizontal.v-widget {
 	display: inline;
 }
 
-.dashboard .sales .viewheader {
+.dashboard .sales-view.sales-view {
 	padding: 25px;
+	overflow: visible;
 }
 
-.dashboard .sales .v-timeline:focus {
-	outline: none;
+.dashboard .sales-view.sales-view .v-horizontallayout {
+	white-space: normal !important;
 }
 
-.dashboard .sales .v-timeline-widget-modelegend {
+.dashboard .sales-view.sales-view .sparks {
+	background: white;
+	color: #474747;
+	border-radius: 4px;
+	border: 1px solid #d5d5d5;
+	-webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
+	margin-bottom: 8px;
+}
+
+.dashboard .sales-view.sales-view .dashboard-panel-toolbar {
+	padding: 1px 0 1px 21px;
+	height: 39px;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.dashboard .sales-view.sales-view .dashboard-panels {
+	display: block;
+	height: 100%;
+	margin: 0 -8px;
+}
+
+.dashboard .sales-view.sales-view .dashboard-panels .card {
+	height: 100%;
+	overflow: hidden;
+	padding: 39px 13px 0;
+	position: relative;
+}
+
+.dashboard .sales-view.sales-view .dashboard-panels .card .v-table, .dashboard .sales-view.sales-view .dashboard-panels .card .v-table-table {
 	background: transparent;
+}
+
+.dashboard .sales-view.sales-view .dashboard-panels .top10-revenue .card {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.dashboard .sales-view.sales-view .dashboard-panels .top10-revenue .v-table-table {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.dashboard .sales-view.sales-view .dashboard-panels .top10-revenue .v-table-cell-wrapper {
+	padding-left: 13px;
+	padding-right: 13px;
+}
+
+.dashboard .sales-view.sales-view .dashboard-panels .top10-revenue .v-table-cell-content {
+	border-color: #eaeaea;
+}
+
+.dashboard .sales-view.sales-view .dashboard-panels .top10-revenue .v-table-cell-content-rowheader {
+	color: #969696;
+}
+
+.dashboard .sales-view.sales-view .dashboard-panels .top10-revenue .v-table-cell-content-rowheader .v-table-cell-wrapper {
+	padding-right: 0;
+}
+
+.dashboard .sales-view.sales-view .dashboard-panels .dashboard-panel-slot {
+	padding: 8px;
+	min-height: 220px;
+}
+
+.dashboard .sales-view.sales-view .dashboard-panels[width-range~="0-700px"] .dashboard-panel-slot {
 	width: 100% !important;
-	font-size: 12px;
 }
 
-.dashboard .sales .v-timeline-widget-display .gwt-HTML {
-	left: 0 !important;
-	width: 100%;
-	text-align: center;
-	top: 40% !important;
-	margin-top: -0.5em;
+.dashboard .sales-view.sales-view .dashboard-panels[width-range~="701px-"] .dashboard-panel-slot {
+	width: 50% !important;
 }
 
-.dashboard .sales .v-timeline-widget-display-bottombar {
-	background: transparent;
+.dashboard .sales-view.sales-view .dashboard-panels[height-range~="0-440px"] .dashboard-panel-slot {
+	height: 100%;
 }
 
-.dashboard .sales .v-timeline-widget-legend {
-	margin-top: 0;
+.dashboard .sales-view.sales-view .dashboard-panels[height-range~="441px-"] .dashboard-panel-slot {
+	height: 50%;
 }
 
-.dashboard .sales .v-timeline-widget-legend-value {
-	font-size: 10px;
-	color: #979699;
+.dashboard .sales-view.sales-view .dashboard-panels .dashboard-panel-slot.max {
+	width: 100% !important;
+	height: 100%;
+	padding-top: 0;
+	padding-bottom: 0;
 }
 
-.dashboard .sales .v-timeline-widget-legend-label {
+.dashboard .sales-view.sales-view .dashboard-panels .notes .card {
+	padding: 39px 0 0;
+}
+
+.dashboard .sales-view.sales-view .dashboard-panels .notes .v-textarea {
+	border-top: 1px solid #dfdfdf;
+	padding: 20px 20px 0;
+	line-height: 20px;
 	font-size: 13px;
+	background: #fffdf2 url(img/notes-bg.png) repeat;
+	background-attachment: local;
+	color: #545145;
+	overflow: auto;
 }
 
-.dashboard .sales .v-timeline-widget-display-hscale, .dashboard .sales .v-timeline-widget-display-hscale-left {
-	font-size: 11px;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	padding: 0 3px;
-	border-color: #ccc;
+.dashboard .sales-view[width-range~="0-700px"] .formulario > .v-expand {
+	padding-left: 0 !important;
 }
 
-.dashboard .sales .v-timeline-widget-browser-scale-label {
-	color: rgba(0, 0, 0, 0.7);
-	font-size: 11px;
-	top: auto !important;
-	bottom: 14px;
+.dashboard .sales-view[width-range~="0-700px"] .formulario > .v-expand  > .v-slot {
+	display: block;
+	margin-left: 0 !important;
+	width: 100% !important;
+}
+
+.dashboard .sales-view[width-range~="0-700px"] .formulario > .v-expand  > .v-spacing {
+	height: 12px;
+}
+
+.dashboard .sales-view[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-captioncell, .dashboard .sales-view[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-errorcell, .dashboard .sales-view[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-contentcell {
+	display: inline-block;
+	height: auto;
+}
+
+.dashboard .sales-view[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-captioncell, .dashboard .sales-view[width-range~="0-600px"] .v-formlayout > table > tbody .v-formlayout-errorcell {
+	border-bottom: none;
+	line-height: 1;
+	padding-left: 6px;
+	padding-top: 12px;
+	text-align: left;
+}
+
+.dashboard .sales-view[width-range~="0-600px"] .v-formlayout > table > tbody .v-caption-h4 {
+	height: 0;
+}
+
+.dashboard .sales-view[width-range~="0-600px"] .v-formlayout > table > tbody .v-label-h4 {
+	position: static;
+}
+
+.dashboard .sales-view[width-range~="0-480px"] {
+	padding-left: 13px;
+	padding-right: 13px;
 }
 
 .dashboard .transactions .viewheader {
