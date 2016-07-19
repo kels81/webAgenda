@@ -48,22 +48,29 @@ public class ReportsView extends Panel implements View {
     public ReportsView() {
         addStyleName(ValoTheme.PANEL_BORDERLESS);
         setSizeFull();
-        Responsive.makeResponsive(this);    
 
         root = new VerticalLayout();
-        root.addStyleName("form-content");  //importante
-        root.addComponent(buildHeader());
-
-        root.addComponent(buildForm());
-        root.addComponent(buildFooter());
-        
+        root.setSizeFull();
+        root.setMargin(true);
+        //root.addStyleName("form-content");  //importante
+        root.addStyleName("sales-view");  //importante
         setContent(root);
         Responsive.makeResponsive(root);
+        
+        root.addComponent(buildHeader());
+        root.addComponent(buildForm());
+        
+        Component content = buildFooter();
+        root.addComponent(content);
+        root.setExpandRatio(content, 1);
+        
+        
+        
     }
 
     private Component buildHeader() {
         VerticalLayout header = new VerticalLayout();
-        header.setMargin(new MarginInfo(true, false, false, true));
+        //header.setMargin(new MarginInfo(true, false, false, true));
         header.addStyleName("viewheader");
 
         Responsive.makeResponsive(header);
@@ -73,7 +80,7 @@ public class ReportsView extends Panel implements View {
         titleLabel.addStyleName(ValoTheme.LABEL_H1);
         titleLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
 
-        header.addComponents(titleLabel);
+        header.addComponent(titleLabel);
 
         return header;
     }
@@ -81,11 +88,9 @@ public class ReportsView extends Panel implements View {
     private Component buildForm() {
 
         HorizontalLayout root = new HorizontalLayout();
-        //root.setCaption("Perfil");
-        //root.setIcon(FontAwesome.USER);
         root.setWidth(100.0f, Unit.PERCENTAGE);     //importante
         root.setSpacing(true);
-        root.setMargin(true);
+        //root.setMargin(true);
         root.addStyleName("profile-form");
 
         VerticalLayout pic = new VerticalLayout();
@@ -156,7 +161,8 @@ public class ReportsView extends Panel implements View {
     private Component buildFooter() {
         HorizontalLayout footer = new HorizontalLayout();
         footer.setWidth(100.0f, Unit.PERCENTAGE);
-        footer.setMargin(new MarginInfo(false, true, true, true));
+        //footer.setMargin(new MarginInfo(false, true, true, true));
+        //footer.setMargin(true);
 
         Button ok = new Button("OK");
         ok.addStyleName(ValoTheme.BUTTON_PRIMARY);
