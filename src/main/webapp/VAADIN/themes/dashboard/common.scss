@@ -160,9 +160,10 @@
         }
     }
 
-    .form-content {
-        max-height: round(30 * $v-font-size);
-        max-width: 100%;
+/*    .form-content {
+        //max-height: round(30 * $v-font-size);
+        //max-width: 100%;
+        padding: $view-padding;
         overflow: visible;
 
         .v-horizontallayout {
@@ -208,8 +209,14 @@
                     position: static;
                 }        
             }
+
         }
-    }
+
+        @include width-range($max: 480px) {
+            padding-left: round($view-padding / 2);
+            padding-right: round($view-padding / 2);
+        }
+    }*/
 
     .moviedetailswindow {
         max-height: round(30 * $v-font-size);
@@ -393,6 +400,10 @@
 
     .v-formlayout.light  > table > tbody > [class*="lastrow"] > td {
         border-bottom: 1px solid #eaeaea;
+    }
+    
+    .v-caption-blue-caption{
+        color: #197de1;
     }
 
 
