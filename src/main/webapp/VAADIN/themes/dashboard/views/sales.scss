@@ -1,61 +1,176 @@
 @mixin dashboard-sales-view {
 
-  .sales {
+    .sales-view.sales-view {
 
-    .viewheader {
-      padding: $view-padding;
+        padding: $view-padding;
+        overflow: visible;
+        
+        .v-horizontallayout {
+            white-space: normal !important;
+        }
+        
+        .sparks {
+            @include valo-panel-style;
+            margin-bottom: round($view-padding / 3);
+        }
+
+
+        .dashboard-panel-toolbar {
+            padding: 1px 0 1px round($v-unit-size / 1.8);
+            height: $v-unit-size + 2px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .dashboard-panels {
+            display: block;
+            height: 100%;
+            margin: 0 round($view-padding / -3);
+
+            .card {
+                height: 100%;
+                overflow: hidden;
+                padding: $v-unit-size + 2px round($view-padding / 2) 0;
+                position: relative;
+
+                .v-table, .v-table-table {
+                    background: transparent;
+                }
+            }
+
+            .top10-revenue {
+                .card {
+                    padding-left: 0;
+                    padding-right: 0;
+                }
+
+                .v-table-table {
+                    @include box-shadow(none);
+                }
+
+                .v-table-cell-wrapper {
+                    padding-left: round($view-padding / 2);
+                    padding-right: round($view-padding / 2);
+                }
+
+                .v-table-cell-content {
+                    border-color: first-color(valo-border($strength: 0.3));
+                }
+
+                .v-table-cell-content-rowheader {
+                    color: valo-font-color($v-app-background-color, 0.4);
+
+                    .v-table-cell-wrapper {
+                        padding-right: 0;
+                    }
+                }
+            }
+
+            .dashboard-panel-slot {
+                padding: round($view-padding / 3);
+                min-height: 220px;
+            }
+
+            &[width-range~="0-700px"] {
+                .dashboard-panel-slot {
+                    width: 100% !important;
+                }
+            }
+
+            &[width-range~="701px-"] {
+                .dashboard-panel-slot {
+                    width: 50% !important;
+                }
+            }
+
+            &[height-range~="0-440px"] {
+                .dashboard-panel-slot {
+                    height: 100%;
+                }
+            }
+
+            &[height-range~="441px-"] {
+                .dashboard-panel-slot {
+                    height: 50%;
+                }
+            }
+
+            .dashboard-panel-slot.max {
+                width: 100% !important;
+                height: 100%;
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+
+            .notes {
+                .card {
+                    padding: $v-unit-size + 2px 0 0;
+                }
+
+                .v-textarea {
+                    border-top: valo-border($strength: 0.5);
+                    padding: 20px 20px 0;
+                    line-height: 20px;
+                    font-size: 13px;
+                    background: #fffdf2 url(../img/notes-bg.png) repeat;
+                    background-attachment: local;
+                    color: #545145;
+                    overflow: auto;
+                }
+            }
+        }
+
     }
 
-    .v-timeline:focus {
-      outline: none;
+    .sales-view {
+        @include width-range($max: 700px) {
+            .formulario 
+            > .v-expand {
+                padding-left: 0 !important;
+
+                > .v-slot {
+                    display: block;
+                    margin-left: 0 !important;
+                    width: 100% !important;
+                }
+                > .v-spacing {
+                    height: $v-layout-spacing-vertical;
+                }
+            }
+        }
+
+        @include width-range($max: 600px) {
+            .v-formlayout > table > tbody {
+                .v-formlayout-captioncell,
+                .v-formlayout-errorcell,
+                .v-formlayout-contentcell {
+                    display: inline-block;
+                    height: auto;
+                }
+                .v-formlayout-captioncell,
+                .v-formlayout-errorcell {
+                    border-bottom: none;
+                    line-height: 1;
+                    padding-left: round($v-layout-spacing-vertical / 2);
+                    padding-top: $v-layout-spacing-vertical;
+                    text-align: left;
+                }
+                .v-caption-h4 {
+                    height: 0;
+                }
+                .v-label-h4 {
+                    position: static;
+                }        
+            }
+
+        }
+        
+        @include width-range($max: 480px) {
+            padding-left: round($view-padding / 2);
+            padding-right: round($view-padding / 2);
+        }
     }
 
-    .v-timeline-widget-modelegend {
-      background: transparent;
-      width: 100% !important;
-      font-size: 12px;
-    }
-
-    .v-timeline-widget-display .gwt-HTML {
-      left: 0 !important;
-      width: 100%;
-      text-align: center;
-      top: 40% !important;
-      margin-top: -.5em;
-    }
-
-    .v-timeline-widget-display-bottombar {
-      background: transparent;
-    }
-
-    .v-timeline-widget-legend {
-      margin-top: 0;
-    }
-
-    .v-timeline-widget-legend-value {
-      font-size: 10px;
-      color: #979699;
-    }
-
-    .v-timeline-widget-legend-label {
-      font-size: 13px;
-    }
-
-    .v-timeline-widget-display-hscale,
-    .v-timeline-widget-display-hscale-left {
-      font-size: 11px;
-      @include box-sizing(border-box);
-      padding: 0 3px;
-      border-color: #ccc;
-    }
-
-    .v-timeline-widget-browser-scale-label {
-      color: rgba(0,0,0,.7);
-      font-size: 11px;
-      top: auto !important;
-      bottom: 14px;
-    }
-
-  }
 
 }
