@@ -15,7 +15,6 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  *
@@ -39,6 +38,14 @@ public class DashboardUtils {
         TextArea f = new TextArea(caption);
         f.setNullRepresentation("");
         f.setRows(3);
+        return f;
+    }
+    
+    public PopupDateField createDateFieldNac(String caption) {
+        PopupDateField f = new PopupDateField(caption);
+        f.setDateFormat("dd MMM yyyy");
+        f.setRangeEnd(new Date());
+        f.setTextFieldEnabled(false);
         return f;
     }
     
@@ -72,9 +79,9 @@ public class DashboardUtils {
         cmb.setNullSelectionAllowed(false);
         cmb.addItems("Aguascalientes","Baja California","Baja California Sur","Campeche",
                      "Chiapas","Chihuahua","Coahuila","Colima","Distrito Federal","Durango",
-                     "Guanajuato","Guerrero","Hidalgo","Jalisco","M√©xico","Michoac√°n","Morelos",
-                     "Nayarit","Nuevo Le√≥n","Oaxaca","Puebla","Quer√©taro","Quintana Roo","San Luis Potos√≠",
-                     "Sinaloa","Sonora","Tabasco","Tamaulipas","Tlaxcala","Veracruz","Yucat√°n","Zacatecas");
+                     "Guanajuato","Guerrero","Hidalgo","Jalisco","MÈxico","Michoac·n","Morelos",
+                     "Nayarit","Nuevo LeÛn","Oaxaca","Puebla","QuerÈtaro","Quintana Roo","San Luis PotosÌ",
+                     "Sinaloa","Sonora","Tabasco","Tamaulipas","Tlaxcala","Veracruz","Yucat·n","Zacatecas");
         return cmb;
     }
     
@@ -82,8 +89,8 @@ public class DashboardUtils {
         ComboBox cmb = new ComboBox(caption);
         //cmb.setInputPrompt("Seleccione Parentesco");
         cmb.setNullSelectionAllowed(false);
-        cmb.addItems("Mama","Papa","Hijo (a)","Hermano (a)","T√≠o (a)","Abuelo (a)","Nieto (a)","Esposo (a)",
-                "Primo (a)","Cu√±ado (a)","Nuera","Yerno","Otro","No Tiene");
+        cmb.addItems("Mama","Papa","Hijo(a)","Hermano(a)","TÌo(a)","Abuelo(a)","Nieto(a)","Esposo(a)",
+                "Primo(a)","CuÒado(a)","Nuera","Yerno","Otro","No Tiene");
         return cmb;
     }
     
@@ -91,7 +98,15 @@ public class DashboardUtils {
         ComboBox cmb = new ComboBox(caption);
         //cmb.setInputPrompt("Seleccione Estado Civil");
         cmb.setNullSelectionAllowed(false);
-        cmb.addItems("Soltero(a)","Casado(a)","Viudo(a)","Divorciado(a)","Uni√≥n Libre","Concubinato");
+        cmb.addItems("Soltero(a)","Casado(a)","Viudo(a)","Divorciado(a)","UniÛn Libre","Concubinato");
+        return cmb;
+    }
+    
+    public ComboBox createComboLadaCel(String caption) {
+        ComboBox cmb = new ComboBox(caption);
+        //cmb.setInputPrompt("Seleccione Estado Civil");
+        cmb.setNullSelectionAllowed(false);
+        cmb.addItems("044","045");
         return cmb;
     }
     
@@ -107,7 +122,7 @@ public class DashboardUtils {
         ComboBox cmb = new ComboBox(caption);
         //cmb.setInputPrompt("Seleccione Religi√≥n");
         cmb.setNullSelectionAllowed(false);
-        cmb.addItems("Cat√≥lica","Protestante","Evang√©lica","Testigos de Jehov√°","Adventista","Morm√≥n","Juda√≠smo","Isl√°mica");
+        cmb.addItems("CatÛlica","Protestante","EvangÈlica","Testigos de Jehov·","Adventista","MormÛn","JudaÌsmo","Isl·mica");
         return cmb;
     }
     
@@ -115,12 +130,19 @@ public class DashboardUtils {
         ComboBox cmb = new ComboBox(caption);
         //cmb.setInputPrompt("Seleccione Profesi√≥n");
         cmb.setNullSelectionAllowed(false);
-        cmb.addItems("Administrativos","Biolog√≠a","Comunicaciones","Construcci√≥n","Contabilidad",
-                     "Creatividad","Producci√≥n","Dise√±o Comercial","Derecho y Leyes","Educaci√≥n",
-                     "Ingenier√≠a","Log√≠stica","Transportaci√≥n y Distribuci√≥n","Manufactura", "Produci√≥n y Operaci√≥n",
-                     "Mercadotecnia","Publicidad y Relaciones P√∫blicas","Recursos Humanos","Salud y Belleza",
-                     "Sector Salud","Seguro y Reaseguro","Tecnolog√≠a de la Informaci√≥n / Sistemas","Turismo","Hospitalidad y Gastronom√≠a",
+        cmb.addItems("Administrativos","BiologÌa","Comunicaciones","ConstrucciÛn","Contabilidad",
+                     "Creatividad","ProducciÛn","DiseÒo Comercial","Derecho y Leyes","EducaciÛn",
+                     "IngenierÌa","LogÌstica","TransportaciÛn y DistribuciÛn","Manufactura", "ProduciÛn y OperaciÛn",
+                     "Mercadotecnia","Publicidad y Relaciones P˙blicas","Recursos Humanos","Salud y Belleza",
+                     "Sector Salud","Seguro y Reaseguro","TecnologÌa de la InformaciÛn / Sistemas","Turismo","Hospitalidad y GastronomÌa",
                      "Ventas","Veterinaria / Zoologia");
+        return cmb;
+    }
+    
+    public ComboBox createComboProfSalud(String caption) {
+        ComboBox cmb = new ComboBox(caption);
+        cmb.setNullSelectionAllowed(false);
+        cmb.addItems("MÈdico","PsicÛlogo","NutriÛlogo");
         return cmb;
     }
     
