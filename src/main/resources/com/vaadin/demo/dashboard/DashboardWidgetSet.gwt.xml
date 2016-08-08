@@ -31,4 +31,12 @@
     <inherits name="com.vaadin.addon.timeline.gwt.TimelineWidgetSet" />
 
     
+
+    <inherits name="org.vaadin.resetbuttonfortextfield.WidgetSet" />
+
+    <inherits name="com.vaadin.addon.onoffswitch.WidgetSet" />
+
+    <inherits name="org.vaadin.teemu.switchui.SwitchComponentWidgetset" />
+
+    <inherits name="org.vaadin.suggestfield.WidgetSet" />
 </module>
