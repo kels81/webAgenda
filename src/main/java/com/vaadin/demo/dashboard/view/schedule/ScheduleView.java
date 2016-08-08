@@ -153,7 +153,7 @@ public final class ScheduleView extends CssLayout implements View {
             }
         });
 
-        dayButton = new Button("DÍA", new ClickListener() {
+        dayButton = new Button("DIA", new ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 BasicDateClickHandler handler = (BasicDateClickHandler) calendar
