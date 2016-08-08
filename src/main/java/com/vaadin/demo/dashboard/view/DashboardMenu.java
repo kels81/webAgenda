@@ -112,7 +112,7 @@ public final class DashboardMenu extends CustomComponent {
                 ProfilePreferencesWindow.open(user, false);
             }
         });
-        settingsItem.addItem("ConfiguraciÃ³n", new Command() {
+        settingsItem.addItem("Configuración", new Command() {
             @Override
             public void menuSelected(final MenuItem selectedItem) {
                 ProfilePreferencesWindow.open(user, true);
