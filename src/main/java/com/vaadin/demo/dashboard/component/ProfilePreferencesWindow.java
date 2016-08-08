@@ -2,8 +2,6 @@ package com.vaadin.demo.dashboard.component;
 
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.data.fieldgroup.PropertyId;
-import com.vaadin.demo.dashboard.DashboardUtils;
 import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.ProfileUpdatedEvent;
@@ -19,19 +17,12 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -43,48 +34,10 @@ public class ProfilePreferencesWindow extends Window {
     public static final String ID = "profilepreferenceswindow";
 
     private final BeanFieldGroup<User> fieldGroup;
-    /*
-     * Fields for editing the User object are defined here as class members.
-     * They are later bound to a FieldGroup by calling
-     * fieldGroup.bindMemberFields(this). The Fields' values don't need to be
-     * explicitly set, calling fieldGroup.setItemDataSource(user) synchronizes
-     * the fields with the user object.
-     */
-    @PropertyId("firstName")
-    private TextField txtNombre;
-    @PropertyId("lastName")
-    private TextField txtApPaterno;
-    @PropertyId("lastName2")
-    private TextField txtApMaterno;
-    //@PropertyId("title")
-    private ComboBox cmbTitulo;
-    @PropertyId("male")
-    private OptionGroup rdbGenero;
-    @PropertyId("email")
-    private TextField emailField;
-    @PropertyId("location")
-    private TextField locationField;
-    @PropertyId("phone")
-    private TextField phoneField;
-    @PropertyId("newsletterSubscription")
-    private OptionalSelect<Integer> newsletterField;
-    @PropertyId("website")
-    private TextField websiteField;
-    @PropertyId("bio")
-    private TextArea bioField;
     
-    //private DateField birthDate;
-    private PopupDateField birthDate;
-    
-    
-    // [ TABCONFIGURACION ]
-    
-    private TextField txtUsuario;
-    private TextField txtEmail;
-    private TextField txtPassword;
-    private TextField txtRepPassword;
-    private ComboBox cmbRol;
-
+    private final UploadPicture pic = new UploadPicture();
+    private final PerfilGeneralForm perfilGralForm = new PerfilGeneralForm();
+   
     private ProfilePreferencesWindow(final User user, final boolean preferencesTabOpen) {
         addStyleName("profile-window");        
         setId(ID);
@@ -131,62 +84,10 @@ public class ProfilePreferencesWindow extends Window {
         root.setWidth(100.0f, Unit.PERCENTAGE);     //importante
         root.setSpacing(true);
         root.setMargin(true);
-        root.addStyleName("profile-form");
-
-        VerticalLayout pic = new VerticalLayout();
-        pic.setSizeUndefined();
-        pic.setSpacing(true);
-        Image profilePic = new Image(null, new ThemeResource(
-                "img/profile-pic-300px.jpg"));
-        profilePic.setWidth(100.0f, Unit.PIXELS);
-        pic.addComponent(profilePic);
-
-        Button upload = new Button("Cambiar…", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Notification.show("Not implemented in this demo");
-            }
-        });
-        upload.addStyleName(ValoTheme.BUTTON_TINY);
-        pic.addComponent(upload);
-
-        root.addComponent(pic);
-
-        FormLayout details = new FormLayout();
-        details.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
-        root.addComponent(details);
-        root.setExpandRatio(details, 1);
+        root.addStyleName("profile-form");        
         
-        //[ PRIMERA SECCION ]        
-        Label lblSeccion = new Label("Datos Generales");
-        lblSeccion.addStyleName(ValoTheme.LABEL_H4);
-        lblSeccion.addStyleName(ValoTheme.LABEL_COLORED);
-        details.addComponent(lblSeccion);
-
-        txtNombre = new TextField("Nombre");
-        details.addComponent(txtNombre);
-        txtApPaterno = new TextField("Apellido Paterno");
-        details.addComponent(txtApPaterno);
-        txtApMaterno = new TextField("Apellido Materno");
-        details.addComponent(txtApMaterno);
-
-        cmbTitulo = new ComboBox("Title");
-        //cmbTitulo.setInputPrompt("Please specify");
-        cmbTitulo.addItem("Mr.");
-        cmbTitulo.addItem("Mrs.");
-        cmbTitulo.addItem("Ms.");
-        cmbTitulo.setNullSelectionAllowed(false);
-        cmbTitulo.select("Mr.");
-        details.addComponent(cmbTitulo);
-
-        //birthDate = new DateField("Fecha Nacimiento");
-        DashboardUtils util = new DashboardUtils();
-        birthDate = util.createDateField("Fecha Nacimiento");
-        details.addComponent(birthDate);
-        
-        rdbGenero = util.createRadioGenero("Género");
-        details.addComponent(rdbGenero);
-        
+        root.addComponents(pic, perfilGralForm);
+        root.setExpandRatio(perfilGralForm, 1);
         
         return root;
     }
@@ -194,37 +95,13 @@ public class ProfilePreferencesWindow extends Window {
     // [ SEGUNDO TAB ]
     private Component buildUserTab() {
         HorizontalLayout root = new HorizontalLayout();
-        root.setCaption("Configuración");
+        root.setCaption("Configuraci�n");
         root.setIcon(FontAwesome.COGS);
         root.setWidth(100.0f, Unit.PERCENTAGE);
         root.setMargin(true);
         
-        FormLayout details = new FormLayout();
-        details.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
-        root.addComponent(details);
-
-        //[ PRIMERA SECCION ]        
-        Label lblSeccion = new Label("Datos Usuario");
-        lblSeccion.addStyleName(ValoTheme.LABEL_H4);
-        lblSeccion.addStyleName(ValoTheme.LABEL_COLORED);
-        details.addComponent(lblSeccion);
-
-        txtUsuario = new TextField("Usuario");
-        details.addComponent(txtUsuario);
-        txtEmail = new TextField("Email");
-        details.addComponent(txtEmail);
-        txtPassword = new TextField("Password");
-        details.addComponent(txtPassword);
-        txtRepPassword = new TextField("Repetir Password");
-        details.addComponent(txtRepPassword);
-        cmbRol = new ComboBox("Rol");
-        cmbRol.setInputPrompt("Please specify");
-        cmbRol.addItem("Médico");
-        cmbRol.addItem("Psicólogo");
-        cmbRol.addItem("Nutriólogo");
-        cmbRol.setNullSelectionAllowed(false);
-        cmbRol.setValue("Psicólogo");
-        details.addComponent(cmbRol);
+        PerfilUsuarioForm perfilUserForm = new PerfilUsuarioForm();
+        root.addComponent(perfilUserForm);
 
         return root;
     }
