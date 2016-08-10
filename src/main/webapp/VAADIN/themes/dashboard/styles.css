@@ -12282,3 +12282,75 @@ div.v-layout.v-horizontal.v-widget {
 	display: inline-block;
 	text-align: center;
 }
+
+@font-face {
+	font-family: Multimedia;
+	font-weight: normal;
+	font-style: normal;
+	src: url(../valo/util/bourbon/css3/../../../../dashboard/fonts_multimedia/Flaticon.eot);
+	src: url(../valo/util/bourbon/css3/../../../../dashboard/fonts_multimedia/Flaticon.eot?#iefix) format("embedded-opentype"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_multimedia/Flaticon.woff) format("woff"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_multimedia/Flaticon.ttf) format("truetype"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_multimedia/Flaticon.svg#Multimedia) format("svg");
+}
+
+.Multimedia {
+	font-family: Multimedia;
+	font-style: normal;
+	font-weight: normal;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	display: inline-block;
+	text-align: center;
+}
+
+@font-face {
+	font-family: Ui_Kit;
+	font-weight: normal;
+	font-style: normal;
+	src: url(../valo/util/bourbon/css3/../../../../dashboard/fonts_ui/Flaticon.eot);
+	src: url(../valo/util/bourbon/css3/../../../../dashboard/fonts_ui/Flaticon.eot?#iefix) format("embedded-opentype"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_ui/Flaticon.woff) format("woff"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_ui/Flaticon.ttf) format("truetype"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_ui/Flaticon.svg#Ui_Kit) format("svg");
+}
+
+.Ui_Kit {
+	font-family: Ui_Kit;
+	font-style: normal;
+	font-weight: normal;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	display: inline-block;
+	text-align: center;
+}
+
+@font-face {
+	font-family: Essential;
+	font-weight: normal;
+	font-style: normal;
+	src: url(../valo/util/bourbon/css3/../../../../dashboard/fonts_essential/Flaticon.eot);
+	src: url(../valo/util/bourbon/css3/../../../../dashboard/fonts_essential/Flaticon.eot?#iefix) format("embedded-opentype"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_essential/Flaticon.woff) format("woff"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_essential/Flaticon.ttf) format("truetype"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_essential/Flaticon.svg#Essential) format("svg");
+}
+
+.Essential {
+	font-family: Essential;
+	font-style: normal;
+	font-weight: normal;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	display: inline-block;
+	text-align: center;
+}
+
+@font-face {
+	font-family: Human;
+	font-weight: normal;
+	font-style: normal;
+	src: url(../valo/util/bourbon/css3/../../../../dashboard/fonts_human/Flaticon.eot);
+	src: url(../valo/util/bourbon/css3/../../../../dashboard/fonts_human/Flaticon.eot?#iefix) format("embedded-opentype"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_human/Flaticon.woff) format("woff"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_human/Flaticon.ttf) format("truetype"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_human/Flaticon.svg#Human) format("svg");
+}
+
+.Human {
+	font-family: Human;
+	font-style: normal;
+	font-weight: normal;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	display: inline-block;
+	text-align: center;
+}
