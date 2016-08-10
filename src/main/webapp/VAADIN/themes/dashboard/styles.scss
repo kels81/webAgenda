@@ -7,3 +7,6 @@
   @include addons;
   @include dashboard;
 }
+
+@include font(MaterialIcon, '../../../../dashboard/fonts_material/icomoon');
+@include font(Feather, '../../../../dashboard/fonts_feather/icomoon');
