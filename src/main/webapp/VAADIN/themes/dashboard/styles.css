@@ -11400,11 +11400,11 @@ div.v-layout.v-horizontal.v-widget {
 .dashboard .autocomplete-suggestion {
 	position: relative;
 	padding: 0 0.6em;
-	line-height: 27px;
+	line-height: 23px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	font-weight: 400;
+	font-weight: 300;
 	color: #333;
 }
 
@@ -11414,7 +11414,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .dashboard .autocomplete-suggestion.selected {
-	font-weight: 400;
+	font-weight: 300;
 	background-color: #197de1;
 	border-radius: 3px;
 	color: #ecf2f8;
@@ -12245,4 +12245,40 @@ div.v-layout.v-horizontal.v-widget {
 
 .dashboard .reports .transaction .seats {
 	left: 60%;
+}
+
+@font-face {
+	font-family: MaterialIcon;
+	font-weight: normal;
+	font-style: normal;
+	src: url(../valo/util/bourbon/css3/../../../../dashboard/fonts_material/icomoon.eot);
+	src: url(../valo/util/bourbon/css3/../../../../dashboard/fonts_material/icomoon.eot?#iefix) format("embedded-opentype"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_material/icomoon.woff) format("woff"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_material/icomoon.ttf) format("truetype"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_material/icomoon.svg#MaterialIcon) format("svg");
+}
+
+.MaterialIcon {
+	font-family: MaterialIcon;
+	font-style: normal;
+	font-weight: normal;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	display: inline-block;
+	text-align: center;
+}
+
+@font-face {
+	font-family: Feather;
+	font-weight: normal;
+	font-style: normal;
+	src: url(../valo/util/bourbon/css3/../../../../dashboard/fonts_feather/icomoon.eot);
+	src: url(../valo/util/bourbon/css3/../../../../dashboard/fonts_feather/icomoon.eot?#iefix) format("embedded-opentype"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_feather/icomoon.woff) format("woff"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_feather/icomoon.ttf) format("truetype"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_feather/icomoon.svg#Feather) format("svg");
+}
+
+.Feather {
+	font-family: Feather;
+	font-style: normal;
+	font-weight: normal;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	display: inline-block;
+	text-align: center;
 }
