@@ -7,12 +7,15 @@ import java.util.Date;
 import com.vaadin.demo.dashboard.domain.Movie;
 import com.vaadin.demo.dashboard.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
+import com.vaadin.demo.dashboard.view.message.Essential;
 import com.vaadin.demo.dashboard.view.message.Feather;
+import com.vaadin.demo.dashboard.view.message.Human;
 import com.vaadin.demo.dashboard.view.message.MaterialIcon;
+import com.vaadin.demo.dashboard.view.message.Multimedia;
+import com.vaadin.demo.dashboard.view.message.Ui_Kit;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Responsive;
-import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
@@ -108,7 +111,8 @@ public final class MovieDetailsWindow extends Window {
                         //suggestion.setIcon(new ThemeResource("img/user_icon.png"));
                         //suggestion.setIcon(FontAwesome.USER);
                         //suggestion.setIcon(MaterialIcon.ACCOUNT_CIRCLE);
-                        suggestion.setIcon(Feather.HEAD);
+                        //suggestion.setIcon(Feather.HEAD);
+                        suggestion.setIcon(Human.USER_36);
                         
                     }
                     return suggestions;
@@ -294,11 +298,13 @@ public final class MovieDetailsWindow extends Window {
         txtMotivo = new TextField("Motivo de Consulta");
         fields.addComponent(txtMotivo);
         
-        Label lblPru = new Label(MaterialIcon.ACCOUNT_BOX.getHtml(),ContentMode.HTML);
-        fields.addComponent(lblPru);
-        lblPru =new Label(FontAwesome.AMAZON.getHtml(),ContentMode.HTML);
-        fields.addComponent(lblPru);
-        lblPru =new Label(Feather.HEAD.getHtml(),ContentMode.HTML);
+        Label lblPru = new Label(
+                 MaterialIcon.ACCOUNT_CIRCLE.getHtml()+" "
+                +Feather.HEAD.getHtml()+" "
+                +Ui_Kit.USER_1.getHtml()+" "
+                +Essential.USER_3.getHtml()+" "
+                +Multimedia.AVATAR.getHtml()+" "
+                +Human.USER_36.getHtml(),ContentMode.HTML);
         fields.addComponent(lblPru);
         
 
