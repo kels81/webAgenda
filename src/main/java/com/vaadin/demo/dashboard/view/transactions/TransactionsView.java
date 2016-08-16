@@ -36,6 +36,7 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -83,7 +84,7 @@ public final class TransactionsView extends VerticalLayout implements View {
     }
 
     private Component buildToolbar() {
-        HorizontalLayout header = new HorizontalLayout();
+        VerticalLayout header = new VerticalLayout();
         header.addStyleName("viewheader");
         header.setSpacing(true);
         Responsive.makeResponsive(header);
@@ -98,7 +99,10 @@ public final class TransactionsView extends VerticalLayout implements View {
         HorizontalLayout tools = new HorizontalLayout(buildFilter(),
                 createReport);
         tools.setSpacing(true);
+        tools.setWidth(100.0f, Unit.PERCENTAGE);
         tools.addStyleName("toolbar");
+        //tools.setComponentAlignment(buildFilter(), Alignment.MIDDLE_LEFT);
+        //tools.setComponentAlignment(createReport, Alignment.MIDDLE_RIGHT);
         header.addComponent(tools);
 
         return header;
@@ -160,6 +164,7 @@ public final class TransactionsView extends VerticalLayout implements View {
         filter.setInputPrompt("Filter");
         filter.setIcon(FontAwesome.SEARCH);
         filter.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
+        filter.setWidth(100.0f, Unit.PERCENTAGE);
         filter.addShortcutListener(new ShortcutListener("Clear",
                 KeyCode.ESCAPE, null) {
             @Override
