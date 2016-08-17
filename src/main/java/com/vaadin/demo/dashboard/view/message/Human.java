@@ -13,7 +13,8 @@ import com.vaadin.server.GenericFontIcon;
  * @author Edrd
  */
 public enum Human implements FontIcon {
-    USER_36(0XF137);
+    USER_36(0XF137),
+    USER_4(0XF139);
     
     private final int codepoint;
     public static final String FONT_FAMILY = "Human";
