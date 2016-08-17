@@ -17,6 +17,8 @@ import com.vaadin.demo.dashboard.component.PatientPreferencesWindow;
 import com.vaadin.demo.dashboard.domain.User;
 import com.vaadin.demo.dashboard.event.DashboardEvent;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
+import com.vaadin.demo.dashboard.view.message.Human;
+import com.vaadin.demo.dashboard.view.message.Solid;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Sizeable.Unit;
@@ -78,7 +80,7 @@ public class SalesView extends Panel implements View {
         Responsive.makeResponsive(root);
 
         root.addComponent(buildHeader());
-        root.addComponent(buildToolBar());
+        //root.addComponent(buildToolBar());
         root.addComponent(buildForm());
         //root.addComponent(buildConsulta());
         //root.addComponent(buildEnfermedades());
@@ -126,17 +128,18 @@ public class SalesView extends Panel implements View {
 
     private Component buildHeader() {
         VerticalLayout header = new VerticalLayout();
+        header.setSpacing(true);
         header.addStyleName("viewheader");
 
         Responsive.makeResponsive(header);
 
-        //Label titleLabel = new Label("Pacientes");
-        Label titleLabel = new Label("Dashboard");
+        Label titleLabel = new Label("Pacientes");
         titleLabel.setSizeUndefined();
         titleLabel.addStyleName(ValoTheme.LABEL_H1);
         titleLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
         
-        header.addComponent(titleLabel);
+        header.addComponents(titleLabel,buildToolBar());
+        
 
         return header;
     }
@@ -144,19 +147,20 @@ public class SalesView extends Panel implements View {
     private Component buildToolBar() {
         HorizontalLayout tools = new HorizontalLayout();
         tools.setWidth(100.0f, Unit.PERCENTAGE);
-        //tools.addStyleName("toolbar");
-        tools.setMargin(new MarginInfo(false, false, true, false));
+        tools.addStyleName("toolbar");
         
         TextField filter = new TextField();
         filter.setInputPrompt("Buscar por nombre y/o apellidos");
         filter.setIcon(FontAwesome.SEARCH);
         filter.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
         filter.setWidth(100.0f, Unit.PERCENTAGE);
-        
         ResetButtonForTextField.extend(filter);
                 
         Button addPaciente = new Button("Nuevo Paciente");
-        addPaciente.setIcon(FontAwesome.USER);
+        addPaciente.setDescription("Nuevo Paciente");
+        //addPaciente.setIcon(FontAwesome.USER);
+        addPaciente.setIcon(Solid.USER_2);
+        //addPaciente.addStyleName("patientIcon");
         addPaciente.addStyleName(ValoTheme.BUTTON_PRIMARY);
         addPaciente.addClickListener(new Button.ClickListener() {
             @Override
@@ -176,13 +180,12 @@ public class SalesView extends Panel implements View {
         tools.setComponentAlignment(filter, Alignment.MIDDLE_LEFT);
         tools.setComponentAlignment(addPaciente, Alignment.MIDDLE_RIGHT);
         
+        
         return tools;
     }
 
     private Component buildForm() {
         VerticalLayout root = new VerticalLayout();
-        //root.setMargin(true);
-        root.setMargin(new MarginInfo(false, true, true, true));
         root.setSpacing(true);
         root.addStyleName("sparks");
 
@@ -211,7 +214,7 @@ public class SalesView extends Panel implements View {
         txtApPaterno = util.createTextField("Apellido Paterno");
         txtApmaterno = util.createTextField("Apellido Materno");
         txtFechNac = util.createDateFieldNac("Fecha Nacimiento");
-        cmbGenero = util.createComboGenero("GÃ©nero");
+        cmbGenero = util.createComboGenero("Género");
         cmbEstados = util.createComboEstados("Estado Nacimiento");
         txtCURP = util.createTextField("CURP");
 
@@ -255,7 +258,7 @@ public class SalesView extends Panel implements View {
         detailsForm.setWidth(100.0f, Unit.PERCENTAGE);                      //importante
         detailsForm.setSpacing(true);
 
-        root.addComponent(createLabel("InformaciÃ³n Enfermedad"));
+        root.addComponent(createLabel("Información Enfermedad"));
 
         FormLayout form1 = new FormLayout();
         form1.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
@@ -268,7 +271,7 @@ public class SalesView extends Panel implements View {
 
         txAEnfermedades = util.createTextArea("Enfermedad(s)");
         txAEnfermedades.addStyleName("notes");
-        txAMedicamento = util.createTextArea("Toma algÃºn medicamento");
+        txAMedicamento = util.createTextArea("Toma algún medicamento");
         txAMedicamento.addStyleName("color1");
 
         form1.addComponent(txAEnfermedades);
