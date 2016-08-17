@@ -368,10 +368,20 @@
             }
 
             .toolbar {
-                white-space: normal;
+                > .v-expand {
+                    padding-left: 0 !important;
 
-                > .v-spacing {
-                    height: round($v-unit-size / 4);
+                    > .v-slot {
+                        display: block;
+                        margin-left: 0 !important;
+                        width: 100% !important;
+                        text-align: left;
+                    }
+
+/*                    > .v-spacing {
+                        //height: $v-layout-spacing-vertical;
+                        height: round($v-unit-size / 4);
+                    }*/
                 }
             }
         }
@@ -429,21 +439,6 @@
         .view-content {
             border-radius: 0;
         }
-    }
-
-    .v-textarea-color1 {
-        @include valo-textarea-style($background-color: #fe902a);
-    }
-
-    .v-textarea-notes {
-        border-top: valo-border($strength: 0.5);
-        padding: 20px 20px 0;
-        line-height: 20px;
-        font-size: 13px;
-        background: #fffdf2 url(../dashboard/img/notes-bg.png) repeat;
-        background-attachment: local;
-        color: #545145;
-        overflow: auto;
     }
 
     .v-calendar-day-number {
@@ -540,7 +535,6 @@
         background-color: white;
         padding: 4px;
         box-shadow: -1px 1px 3px rgba(0,0,0,.1);
-        //box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.09);
         &[class*="animate-in"] {
             animation: 120ms ease 0s normal none 1 running valo-overlay-animate-in;
         }
@@ -560,8 +554,7 @@
 
     .autocomplete-suggestion {
         position: relative;
-        padding: 0 .6em;
-        line-height: 23px;
+        line-height: 20px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -582,6 +575,30 @@
             background-image: linear-gradient(to bottom, #1b87e3 2%, #166ed5 98%);
             box-shadow: 0 1px 0 #4d98e6 inset, 0 -1px 0 #166bca inset, 0 2px 3px rgba(0, 0, 0, 0.05)
         }
+    }
+
+    .autocomplete-suggestion-text {
+        width: 100%;
+        > * {
+            position: relative;
+            &::before {
+                content: "&nbsp;";
+                visibility: hidden;
+            }
+            span {
+                left: 0;
+                margin-top: 0.2em;
+                overflow: hidden;
+                position: absolute;
+                right: 0;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .patientIcon .v-icon {
+        font-size: 24px;
     }
 
 
