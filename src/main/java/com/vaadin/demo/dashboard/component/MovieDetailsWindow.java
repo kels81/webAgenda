@@ -1,5 +1,6 @@
 package com.vaadin.demo.dashboard.component;
 
+import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,17 +8,12 @@ import java.util.Date;
 import com.vaadin.demo.dashboard.domain.Movie;
 import com.vaadin.demo.dashboard.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
-import com.vaadin.demo.dashboard.view.message.Essential;
-import com.vaadin.demo.dashboard.view.message.Feather;
 import com.vaadin.demo.dashboard.view.message.Human;
-import com.vaadin.demo.dashboard.view.message.MaterialIcon;
-import com.vaadin.demo.dashboard.view.message.Multimedia;
-import com.vaadin.demo.dashboard.view.message.Ui_Kit;
+import com.vaadin.event.FieldEvents;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Responsive;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -47,7 +43,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import org.vaadin.resetbuttonfortextfield.ResetButtonForTextField;
+import java.util.regex.Pattern;
 import org.vaadin.suggestfield.BeanSuggestionConverter;
 import org.vaadin.suggestfield.SuggestField;
 import org.vaadin.suggestfield.client.SuggestFieldSuggestion;
@@ -67,6 +63,9 @@ public final class MovieDetailsWindow extends Window {
     private SuggestField suggestField;                                  //PRUEBAS SUGGESTFIELD
     private List<CountryBean> items = new ArrayList<CountryBean>();     //PRUEBAS SUGGESTFIELD
     long id = 0;                                                        //PRUEBAS SUGGESTFIELD
+    
+    private Property.ValueChangeListener valueChangeListenerHourStart;
+    private Property.ValueChangeListener valueChangeListenerHourEnd;
 
     /*
      *PRUEBAS AUTOCOMPLETETEXTFIELD
@@ -94,8 +93,7 @@ public final class MovieDetailsWindow extends Window {
         "Gonzalo Macias Almanza",
         "Lorena Hernandez Macias",
         "Enrique Arellano Garcia",
-        "Elias Arellano Garcia",
-    });
+        "Elias Arellano Garcia",});
 
     //AutocompleteSuggestionProvider suggestionProvider = new CollectionSuggestionProvider(theJavas, MatchMode.CONTAINS, true, Locale.US);
     private final CollectionSuggestionProvider suggestionProvider
@@ -107,13 +105,14 @@ public final class MovieDetailsWindow extends Window {
                     int i = 0;
                     for (AutocompleteSuggestion suggestion : suggestions) {
                         //suggestion.setDescription("This is a description for "
-                                //+ suggestion.getValue() + " ...");
+                        //+ suggestion.getValue() + " ...");
                         //suggestion.setIcon(new ThemeResource("img/user_icon.png"));
                         //suggestion.setIcon(FontAwesome.USER);
                         //suggestion.setIcon(MaterialIcon.ACCOUNT_CIRCLE);
                         //suggestion.setIcon(Feather.HEAD);
                         suggestion.setIcon(Human.USER_36);
-                        
+                        suggestion.addStyleName("patientIcon");
+
                     }
                     return suggestions;
                 }
@@ -210,6 +209,8 @@ public final class MovieDetailsWindow extends Window {
     }
 
     private Component buildDetailsForm(final Date startTime, final Date endTime) {
+        System.out.println("endTime = " + endTime);
+        System.out.println("startTime = " + startTime);
         FormLayout fields = new FormLayout();
         fields.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
         //fields.setSpacing(false);
@@ -221,36 +222,87 @@ public final class MovieDetailsWindow extends Window {
         lblDate.addStyleName(ValoTheme.LABEL_COLORED);
         fields.addComponent(lblDate);
 
-        Label label;
+        valueChangeListenerHourEnd = (Property.ValueChangeEvent event) -> {
+            String value = event.getProperty().getValue().toString().replaceAll("\\s", ":");
+            String[] valueSplit = value.split(":");
+            int hour = Integer.parseInt(valueSplit[0]);
+            String minutes = valueSplit[1];
+            String indicator = valueSplit[2];
+            
+            if (hour == 11) {
+                switch (indicator) {
+                    case "AM":
+                        indicator = "PM";
+                        break;
+                    case "PM":
+                        indicator = "AM";
+                        break;
+                }
+                hour++;
+            } else if (hour == 12) {
+                hour = hour - 11;
+            } else {
+                hour++;
+            }
+            
+            String newHour = (hour < 10 ? "0" + String.valueOf(hour) : String.valueOf(hour)) + ":" + minutes + " " + indicator;
+            cmbHoursEnd.setValue(newHour);
+        };
+        
+        valueChangeListenerHourStart = (Property.ValueChangeEvent event) -> {
+            String value = event.getProperty().getValue().toString().replaceAll("\\s", ":");
+            String[] valueSplit = value.split(":");
+            int hour = Integer.parseInt(valueSplit[0]);
+            String minutes = valueSplit[1];
+            String indicator = valueSplit[2];
+            
+            if (hour == 12) {
+                switch (indicator) {
+                    case "AM":
+                        indicator = "PM";
+                        break;
+                    case "PM":
+                        indicator = "AM";
+                        break;
+                }
+                hour--;
+            } else if (hour == 1) {
+                hour = hour + 11;
+            } else {
+                hour--;
+            }
+            
+            String newHour = (hour < 10 ? "0" + String.valueOf(hour) : String.valueOf(hour)) + ":" + minutes + " " + indicator;
+            cmbHoursStart.setValue(newHour);
+        };
+        
         SimpleDateFormat df = new SimpleDateFormat();
         df.applyPattern("hh:mm a");
         if (startTime != null) {
-            cmbHoursStart = createComboHours("De", 9, 23);
+            cmbHoursStart = createComboHours("De", 9, 23, 1);
             cmbHoursStart.setNullSelectionAllowed(false);
             cmbHoursStart.setTextInputAllowed(false);
             cmbHoursStart.select(df.format(startTime));
+            cmbHoursStart.addValueChangeListener(valueChangeListenerHourEnd);
             fields.addComponent(cmbHoursStart);
         }
 
         if (endTime != null) {
-            cmbHoursEnd = createComboHours("A", 9, 23);
+            cmbHoursEnd = createComboHours("A", 9, 23, 0);
             cmbHoursEnd.setNullSelectionAllowed(false);
             cmbHoursEnd.setTextInputAllowed(false);
             cmbHoursEnd.select(df.format(endTime));
+            cmbHoursEnd.addValueChangeListener(valueChangeListenerHourStart);
             fields.addComponent(cmbHoursEnd);
         }
 
         CheckBox allDayField = createCheckBox("Todo el día");
         allDayField.addValueChangeListener(new Property.ValueChangeListener() {
-
-            private static final long serialVersionUID = -7104996493482558021L;
-
             @Override
             public void valueChange(Property.ValueChangeEvent event) {
                 Object value = event.getProperty().getValue();
                 verCheck(value);
             }
-
         });
         fields.addComponent(allDayField);
 
@@ -263,22 +315,29 @@ public final class MovieDetailsWindow extends Window {
         btnSearch.setEnabled(false);
         btnSearch.addStyleName(ValoTheme.BUTTON_BORDERLESS);
 
-        suggestField = new SuggestField();
-        suggestField.setImmediate(true);
-        suggestField.setWidth(100.0f, Unit.PERCENTAGE);
-        suggestField.addStyleName(ValoTheme.TEXTFIELD_BORDERLESS);
-        suggestField.setSuggestionHandler(new SuggestField.SuggestionHandler() {
+        //LISTENERS AUTOCOMPLETE FIELD
+        FieldEvents.TextChangeListener textChangeListener = new FieldEvents.TextChangeListener() {
             @Override
-            public List<Object> searchItems(String query) {
-                System.out.println("Query: " + query);
-                return handleSearchQuery(query);
+            public void textChange(FieldEvents.TextChangeEvent event) {
+                btnSearch.setVisible((event.getText().length() <= 0));
             }
-        });
-        suggestField.setSuggestionConverter(new CountrySuggestionConverter());
-        //searchField.addComponents(suggestField, btnSearch);
-        //searchField.setExpandRatio(suggestField, 1);
-        fields.addComponent(suggestField);
-        
+        };
+
+//        suggestField = new SuggestField();
+//        suggestField.setImmediate(true);
+//        suggestField.setWidth(100.0f, Unit.PERCENTAGE);
+//        suggestField.addStyleName(ValoTheme.TEXTFIELD_BORDERLESS);
+//        suggestField.setSuggestionHandler(new SuggestField.SuggestionHandler() {
+//            @Override
+//            public List<Object> searchItems(String query) {
+//                System.out.println("Query: " + query);
+//                return handleSearchQuery(query);
+//            }
+//        });
+//        suggestField.setSuggestionConverter(new CountrySuggestionConverter());
+//        searchField.addComponents(suggestField, btnSearch);
+//        searchField.setExpandRatio(suggestField, 1);
+//        fields.addComponent(suggestField);
         autoComplete = new AutocompleteTextField();
         autoComplete.setImmediate(true);
         autoComplete.setWidth(100.0f, Unit.PERCENTAGE);
@@ -289,7 +348,8 @@ public final class MovieDetailsWindow extends Window {
         autoComplete.setScrollBehavior(ScrollBehavior.NONE);
         autoComplete.setSuggestionLimit(0);
         autoComplete.setSuggestionProvider(suggestionProvider);
-        ResetButtonForTextField.extend(autoComplete);
+        autoComplete.addTextChangeListener(textChangeListener);
+        //ResetButtonForTextField.extend(autoComplete);
 
         searchField.addComponents(autoComplete, btnSearch);
         searchField.setExpandRatio(autoComplete, 1);
@@ -297,17 +357,16 @@ public final class MovieDetailsWindow extends Window {
 
         txtMotivo = new TextField("Motivo de Consulta");
         fields.addComponent(txtMotivo);
-        
-        Label lblPru = new Label(
-                 MaterialIcon.ACCOUNT_CIRCLE.getHtml()+" "
-                +Feather.HEAD.getHtml()+" "
-                +Ui_Kit.USER_1.getHtml()+" "
-                +Essential.USER_3.getHtml()+" "
-                +Multimedia.AVATAR.getHtml()+" "
-                +Human.USER_36.getHtml(),ContentMode.HTML);
-        fields.addComponent(lblPru);
-        
 
+//        Label lblPru = new Label(
+//                MaterialIcon.ACCOUNT_CIRCLE.getHtml() + " "
+//                + Feather.HEAD.getHtml() + " "
+//                + Ui_Kit.USER_1.getHtml() + " "
+//                + Essential.USER_3.getHtml() + " "
+//                + Multimedia.AVATAR.getHtml() + " "
+//                + Human.USER_36.getHtml(), ContentMode.HTML);
+//        lblPru.addStyleName("patientIcon");
+        //fields.addComponent(lblPru);
         return fields;
     }
 
@@ -337,17 +396,18 @@ public final class MovieDetailsWindow extends Window {
         return upperMonth;
     }
 
-    private ComboBox createComboHours(String caption, Integer hourStart, Integer hourEnd) {
+    private ComboBox createComboHours(String caption, Integer hourStart, Integer hourEnd, Integer comodin) {
         ComboBox hours = new ComboBox(caption);
         /*SimpleDateFormat df12 = new SimpleDateFormat();
          SimpleDateFormat df24 = new SimpleDateFormat();
          df12.applyPattern("hh:mm a");
          df24.applyPattern("HH:mm");*/
-        String h = "";
-        String type = "";
+        hourStart = comodin == 0 ? hourStart + 1 : hourStart;
+        hourEnd = comodin == 1 ? hourEnd - 1 : hourEnd;
+        
         for (int i = hourStart; i <= hourEnd; i++) {
-            h = (i < 10 ? "0" + String.valueOf(i) : i > 12 && i < 22 ? "0" + String.valueOf(i - 12) : i >= 22 ? String.valueOf(i - 12) : String.valueOf(i));
-            type = (i < 12 ? " AM" : i >= 12 ? " PM" : "");
+            String h = (i < 10 ? "0" + String.valueOf(i) : i > 12 && i < 22 ? "0" + String.valueOf(i - 12) : i >= 22 ? String.valueOf(i - 12) : String.valueOf(i));
+            String type = (i < 12 ? " AM" : i >= 12 ? " PM" : "");
             //System.out.println("i"+i);
             //hours.addItem(df12.format(i));
             if (i == 24) {
