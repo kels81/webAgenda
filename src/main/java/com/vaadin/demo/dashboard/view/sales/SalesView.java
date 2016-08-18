@@ -147,6 +147,7 @@ public class SalesView extends Panel implements View {
     private Component buildToolBar() {
         HorizontalLayout tools = new HorizontalLayout();
         tools.setWidth(100.0f, Unit.PERCENTAGE);
+        tools.setSpacing(true);
         tools.addStyleName("toolbar");
         
         TextField filter = new TextField();
@@ -156,22 +157,17 @@ public class SalesView extends Panel implements View {
         filter.setWidth(100.0f, Unit.PERCENTAGE);
         ResetButtonForTextField.extend(filter);
                 
-        Button addPaciente = new Button("Nuevo Paciente");
-        addPaciente.setDescription("Nuevo Paciente");
-        //addPaciente.setIcon(FontAwesome.USER);
-        addPaciente.setIcon(Solid.USER_2);
-        //addPaciente.addStyleName("patientIcon");
+        Button addPaciente = new Button("Paciente");
+        addPaciente.setDescription("Agregar Paciente");
+        addPaciente.setIcon(FontAwesome.PLUS_CIRCLE);
         addPaciente.addStyleName(ValoTheme.BUTTON_PRIMARY);
-        addPaciente.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                try {
-                    User user = (User) VaadinSession.getCurrent().getAttribute(
-                User.class.getName());
-                    PatientPreferencesWindow.open(user, true);
-                } catch (Exception e) {
-                    
-                }
+        addPaciente.addClickListener((Button.ClickEvent event) -> {
+            try {
+                User user = (User) VaadinSession.getCurrent().getAttribute(
+                        User.class.getName());
+                PatientPreferencesWindow.open(user, true);
+            } catch (Exception e) {
+                
             }
         });
         
