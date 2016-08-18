@@ -1,12 +1,12 @@
 package com.vaadin.demo.dashboard.component;
 
-import com.vaadin.data.Container;
 import com.vaadin.data.Property;
+import com.vaadin.demo.dashboard.DashboardUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.vaadin.demo.dashboard.domain.Movie;
-import com.vaadin.demo.dashboard.event.DashboardEvent.CloseOpenWindowsEvent;
+import com.vaadin.demo.dashboard.event.DashboardEvent;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.view.message.Human;
 import com.vaadin.event.FieldEvents;
@@ -43,12 +43,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
 import org.vaadin.suggestfield.BeanSuggestionConverter;
 import org.vaadin.suggestfield.SuggestField;
 import org.vaadin.suggestfield.client.SuggestFieldSuggestion;
 
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public final class MovieDetailsWindow extends Window {
 
     //private final DateField txtstartDate;
@@ -66,61 +65,19 @@ public final class MovieDetailsWindow extends Window {
     
     private Property.ValueChangeListener valueChangeListenerHourStart;
     private Property.ValueChangeListener valueChangeListenerHourEnd;
+    
+    private AppointmentForm appointmentForm;
+    
+    private final DashboardUtils util = new DashboardUtils();
 
-    /*
-     *PRUEBAS AUTOCOMPLETETEXTFIELD
-     */
-    Collection<String> NAMES = Arrays.asList(new String[]{
-        "Olga Almanza Arellano",
-        "Graciela Alvarado Alvarado",
-        "Enriqueta Almanza Delgado",
-        "Ma Marco Cardona Alvarez",
-        "Alicia Delgado Rodriguez",
-        "Graciela Delgado Guerra",
-        "Amparo Chavez Rodriguez",
-        "Gonzalo Chavarria Villalobos",
-        "Carolina Escobedo Alvarez",
-        "Magdalena Hernandez Becerra",
-        "Elvira Hernandez Martinez",
-        "Martha Martinez Salas",
-        "Juan Arellano Garcia",
-        "Obdelia Reyes Delgado",
-        "Belia Elvia Arellano Garcia",
-        "Ma Carmen Prieto Duron",
-        "Vela Segovia Arroyo",
-        "Celestina Herrera Gonzalez",
-        "Angelica Macias Almanza",
-        "Gonzalo Macias Almanza",
-        "Lorena Hernandez Macias",
-        "Enrique Arellano Garcia",
-        "Elias Arellano Garcia",});
+    
+    
 
     //AutocompleteSuggestionProvider suggestionProvider = new CollectionSuggestionProvider(theJavas, MatchMode.CONTAINS, true, Locale.US);
-    private final CollectionSuggestionProvider suggestionProvider
-            = new CollectionSuggestionProvider(NAMES, MatchMode.CONTAINS, true) {
-                @Override
-                public Collection<AutocompleteSuggestion> querySuggestions(AutocompleteQuery query) {
-                    Collection<AutocompleteSuggestion> suggestions = super.querySuggestions(query);
-
-                    int i = 0;
-                    for (AutocompleteSuggestion suggestion : suggestions) {
-                        //suggestion.setDescription("This is a description for "
-                        //+ suggestion.getValue() + " ...");
-                        //suggestion.setIcon(new ThemeResource("img/user_icon.png"));
-                        //suggestion.setIcon(FontAwesome.USER);
-                        //suggestion.setIcon(MaterialIcon.ACCOUNT_CIRCLE);
-                        //suggestion.setIcon(Feather.HEAD);
-                        suggestion.setIcon(Human.USER_36);
-                        suggestion.addStyleName("patientIcon");
-
-                    }
-                    return suggestions;
-                }
-
-            };
+    
 
     private MovieDetailsWindow(final Movie movie, final Date startTime, final Date endTime) {
-        addStyleName("moviedetailswindow");
+        //addStyleName("moviedetailswindow");
         Responsive.makeResponsive(this);
 
         setCaption(movie.getTitle());
@@ -152,7 +109,7 @@ public final class MovieDetailsWindow extends Window {
         setCloseShortcut(ShortcutAction.KeyCode.ESCAPE, null);
         //addCloseShortcut(ShortcutAction.KeyCode.ESCAPE, null);
         setResizable(false);
-        setClosable(false);
+        setClosable(true);
         setHeight(90.0f, Unit.PERCENTAGE);
 
         VerticalLayout content = new VerticalLayout();
@@ -202,241 +159,180 @@ public final class MovieDetailsWindow extends Window {
         details.setWidth(100.0f, Unit.PERCENTAGE);      //importante
         details.setMargin(true);
 
-        Component detailsForm = buildDetailsForm(startTime, endTime);
-        details.addComponent(detailsForm);
+        appointmentForm = new AppointmentForm(startTime, endTime);
+        details.addComponent(appointmentForm);
 
         return details;
     }
 
-    private Component buildDetailsForm(final Date startTime, final Date endTime) {
-        System.out.println("endTime = " + endTime);
-        System.out.println("startTime = " + startTime);
-        FormLayout fields = new FormLayout();
-        fields.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
-        //fields.setSpacing(false);
-        //fields.setMargin(false);
-
-        //txtstartDate = createDateField("Start date");
-        Label lblDate = new Label(setUpperMonth(startTime));
-        lblDate.addStyleName(ValoTheme.LABEL_H4);
-        lblDate.addStyleName(ValoTheme.LABEL_COLORED);
-        fields.addComponent(lblDate);
-
-        valueChangeListenerHourEnd = (Property.ValueChangeEvent event) -> {
-            String value = event.getProperty().getValue().toString().replaceAll("\\s", ":");
-            String[] valueSplit = value.split(":");
-            int hour = Integer.parseInt(valueSplit[0]);
-            String minutes = valueSplit[1];
-            String indicator = valueSplit[2];
-            
-            if (hour == 11) {
-                switch (indicator) {
-                    case "AM":
-                        indicator = "PM";
-                        break;
-                    case "PM":
-                        indicator = "AM";
-                        break;
-                }
-                hour++;
-            } else if (hour == 12) {
-                hour = hour - 11;
-            } else {
-                hour++;
-            }
-            
-            String newHour = (hour < 10 ? "0" + String.valueOf(hour) : String.valueOf(hour)) + ":" + minutes + " " + indicator;
-            cmbHoursEnd.setValue(newHour);
-        };
-        
-        valueChangeListenerHourStart = (Property.ValueChangeEvent event) -> {
-            String value = event.getProperty().getValue().toString().replaceAll("\\s", ":");
-            String[] valueSplit = value.split(":");
-            int hour = Integer.parseInt(valueSplit[0]);
-            String minutes = valueSplit[1];
-            String indicator = valueSplit[2];
-            
-            if (hour == 12) {
-                switch (indicator) {
-                    case "AM":
-                        indicator = "PM";
-                        break;
-                    case "PM":
-                        indicator = "AM";
-                        break;
-                }
-                hour--;
-            } else if (hour == 1) {
-                hour = hour + 11;
-            } else {
-                hour--;
-            }
-            
-            String newHour = (hour < 10 ? "0" + String.valueOf(hour) : String.valueOf(hour)) + ":" + minutes + " " + indicator;
-            cmbHoursStart.setValue(newHour);
-        };
-        
-        SimpleDateFormat df = new SimpleDateFormat();
-        df.applyPattern("hh:mm a");
-        if (startTime != null) {
-            cmbHoursStart = createComboHours("De", 9, 23, 1);
-            cmbHoursStart.setNullSelectionAllowed(false);
-            cmbHoursStart.setTextInputAllowed(false);
-            cmbHoursStart.select(df.format(startTime));
-            cmbHoursStart.addValueChangeListener(valueChangeListenerHourEnd);
-            fields.addComponent(cmbHoursStart);
-        }
-
-        if (endTime != null) {
-            cmbHoursEnd = createComboHours("A", 9, 23, 0);
-            cmbHoursEnd.setNullSelectionAllowed(false);
-            cmbHoursEnd.setTextInputAllowed(false);
-            cmbHoursEnd.select(df.format(endTime));
-            cmbHoursEnd.addValueChangeListener(valueChangeListenerHourStart);
-            fields.addComponent(cmbHoursEnd);
-        }
-
-        CheckBox allDayField = createCheckBox("Todo el día");
-        allDayField.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                Object value = event.getProperty().getValue();
-                verCheck(value);
-            }
-        });
-        fields.addComponent(allDayField);
-
-        searchField = new HorizontalLayout();
-        searchField.setWidth(100.0f, Unit.PERCENTAGE);
-        searchField.setCaption("Paciente");
-
-        btnSearch = new Button();
-        btnSearch.setIcon(FontAwesome.SEARCH);
-        btnSearch.setEnabled(false);
-        btnSearch.addStyleName(ValoTheme.BUTTON_BORDERLESS);
-
-        //LISTENERS AUTOCOMPLETE FIELD
-        FieldEvents.TextChangeListener textChangeListener = new FieldEvents.TextChangeListener() {
-            @Override
-            public void textChange(FieldEvents.TextChangeEvent event) {
-                btnSearch.setVisible((event.getText().length() <= 0));
-            }
-        };
-
-//        suggestField = new SuggestField();
-//        suggestField.setImmediate(true);
-//        suggestField.setWidth(100.0f, Unit.PERCENTAGE);
-//        suggestField.addStyleName(ValoTheme.TEXTFIELD_BORDERLESS);
-//        suggestField.setSuggestionHandler(new SuggestField.SuggestionHandler() {
+//    private Component buildDetailsForm(final Date startTime, final Date endTime) {
+//        FormLayout fields = new FormLayout();
+//        fields.addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
+//
+//        Label lblDate = new Label(setUpperMonth(startTime));
+//        lblDate.addStyleName(ValoTheme.LABEL_H4);
+//        lblDate.addStyleName(ValoTheme.LABEL_COLORED);
+//        fields.addComponent(lblDate);
+//
+//        valueChangeListenerHourEnd = (Property.ValueChangeEvent event) -> {
+//            String value = event.getProperty().getValue().toString().replaceAll("\\s", ":");
+//            String[] valueSplit = value.split(":");
+//            int hour = Integer.parseInt(valueSplit[0]);
+//            String minutes = valueSplit[1];
+//            String indicator = valueSplit[2];
+//            
+//            if (hour == 11) {
+//                switch (indicator) {
+//                    case "AM":
+//                        indicator = "PM";
+//                        break;
+//                    case "PM":
+//                        indicator = "AM";
+//                        break;
+//                }
+//                hour++;
+//            } else if (hour == 12) {
+//                hour = hour - 11;
+//            } else {
+//                hour++;
+//            }
+//            
+//            String newHour = (hour < 10 ? "0" + String.valueOf(hour) : String.valueOf(hour)) + ":" + minutes + " " + indicator;
+//            cmbHoursEnd.setValue(newHour);
+//        };
+//        
+//        valueChangeListenerHourStart = (Property.ValueChangeEvent event) -> {
+//            String value = event.getProperty().getValue().toString().replaceAll("\\s", ":");
+//            String[] valueSplit = value.split(":");
+//            int hour = Integer.parseInt(valueSplit[0]);
+//            String minutes = valueSplit[1];
+//            String indicator = valueSplit[2];
+//            
+//            if (hour == 12) {
+//                switch (indicator) {
+//                    case "AM":
+//                        indicator = "PM";
+//                        break;
+//                    case "PM":
+//                        indicator = "AM";
+//                        break;
+//                }
+//                hour--;
+//            } else if (hour == 1) {
+//                hour = hour + 11;
+//            } else {
+//                hour--;
+//            }
+//            
+//            String newHour = (hour < 10 ? "0" + String.valueOf(hour) : String.valueOf(hour)) + ":" + minutes + " " + indicator;
+//            cmbHoursStart.setValue(newHour);
+//        };
+//        
+//        SimpleDateFormat df = new SimpleDateFormat();
+//        df.applyPattern("hh:mm a");
+//        if (startTime != null) {
+//            cmbHoursStart = util.createComboHours("De", 9, 23, 1);
+//            cmbHoursStart.select(df.format(startTime));
+//            cmbHoursStart.addValueChangeListener(valueChangeListenerHourEnd);
+//            fields.addComponent(cmbHoursStart);
+//        }
+//
+//        if (endTime != null) {
+//            cmbHoursEnd = util.createComboHours("A", 9, 23, 0);
+//            cmbHoursEnd.select(df.format(endTime));
+//            cmbHoursEnd.addValueChangeListener(valueChangeListenerHourStart);
+//            fields.addComponent(cmbHoursEnd);
+//        }
+//
+//        CheckBox allDayField = createCheckBox("Todo el día");
+//        allDayField.addValueChangeListener(new Property.ValueChangeListener() {
 //            @Override
-//            public List<Object> searchItems(String query) {
-//                System.out.println("Query: " + query);
-//                return handleSearchQuery(query);
+//            public void valueChange(Property.ValueChangeEvent event) {
+//                Object value = event.getProperty().getValue();
+//                verCheck(value);
 //            }
 //        });
-//        suggestField.setSuggestionConverter(new CountrySuggestionConverter());
-//        searchField.addComponents(suggestField, btnSearch);
-//        searchField.setExpandRatio(suggestField, 1);
-//        fields.addComponent(suggestField);
-        autoComplete = new AutocompleteTextField();
-        autoComplete.setImmediate(true);
-        autoComplete.setWidth(100.0f, Unit.PERCENTAGE);
-        autoComplete.addStyleName(ValoTheme.TEXTFIELD_BORDERLESS);
-        autoComplete.setCache(true);
-        autoComplete.setDelay(150);
-        autoComplete.setMinChars(3);
-        autoComplete.setScrollBehavior(ScrollBehavior.NONE);
-        autoComplete.setSuggestionLimit(0);
-        autoComplete.setSuggestionProvider(suggestionProvider);
-        autoComplete.addTextChangeListener(textChangeListener);
-        //ResetButtonForTextField.extend(autoComplete);
-
-        searchField.addComponents(autoComplete, btnSearch);
-        searchField.setExpandRatio(autoComplete, 1);
-        fields.addComponent(searchField);
-
-        txtMotivo = new TextField("Motivo de Consulta");
-        fields.addComponent(txtMotivo);
-
-//        Label lblPru = new Label(
-//                MaterialIcon.ACCOUNT_CIRCLE.getHtml() + " "
-//                + Feather.HEAD.getHtml() + " "
-//                + Ui_Kit.USER_1.getHtml() + " "
-//                + Essential.USER_3.getHtml() + " "
-//                + Multimedia.AVATAR.getHtml() + " "
-//                + Human.USER_36.getHtml(), ContentMode.HTML);
-//        lblPru.addStyleName("patientIcon");
-        //fields.addComponent(lblPru);
-        return fields;
-    }
+//        fields.addComponent(allDayField);
+//
+//        searchField = new HorizontalLayout();
+//        searchField.setWidth(100.0f, Unit.PERCENTAGE);
+//        searchField.setCaption("Paciente");
+//
+//        btnSearch = new Button();
+//        btnSearch.setIcon(FontAwesome.SEARCH);
+//        btnSearch.setEnabled(false);
+//        btnSearch.addStyleName(ValoTheme.BUTTON_BORDERLESS);
+//
+//        //LISTENERS AUTOCOMPLETE FIELD
+//        FieldEvents.TextChangeListener textChangeListener = (FieldEvents.TextChangeEvent event) -> {
+//            btnSearch.setVisible((event.getText().length() <= 0));
+//        };
+//
+////        suggestField = new SuggestField();
+////        suggestField.setImmediate(true);
+////        suggestField.setWidth(100.0f, Unit.PERCENTAGE);
+////        suggestField.addStyleName(ValoTheme.TEXTFIELD_BORDERLESS);
+////        suggestField.setSuggestionHandler(new SuggestField.SuggestionHandler() {
+////            @Override
+////            public List<Object> searchItems(String query) {
+////                System.out.println("Query: " + query);
+////                return handleSearchQuery(query);
+////            }
+////        });
+////        suggestField.setSuggestionConverter(new CountrySuggestionConverter());
+////        searchField.addComponents(suggestField, btnSearch);
+////        searchField.setExpandRatio(suggestField, 1);
+////        fields.addComponent(suggestField);
+//        autoComplete = new AutocompleteTextField();
+//        autoComplete.setImmediate(true);
+//        autoComplete.setWidth(100.0f, Unit.PERCENTAGE);
+//        autoComplete.addStyleName(ValoTheme.TEXTFIELD_BORDERLESS);
+//        autoComplete.setCache(true);
+//        autoComplete.setDelay(150);
+//        autoComplete.setMinChars(3);
+//        autoComplete.setScrollBehavior(ScrollBehavior.NONE);
+//        autoComplete.setSuggestionLimit(0);
+//        autoComplete.setSuggestionProvider(suggestionProvider);
+//        autoComplete.addTextChangeListener(textChangeListener);
+//        //ResetButtonForTextField.extend(autoComplete);
+//
+//        searchField.addComponents(autoComplete, btnSearch);
+//        searchField.setExpandRatio(autoComplete, 1);
+//        fields.addComponent(searchField);
+//
+//        txtMotivo = util.createTextField("Motivo de Consulta");
+//        fields.addComponent(txtMotivo);
+//
+////        Label lblPru = new Label(
+////                MaterialIcon.ACCOUNT_CIRCLE.getHtml() + " "
+////                + Feather.HEAD.getHtml() + " "
+////                + Ui_Kit.USER_1.getHtml() + " "
+////                + Essential.USER_3.getHtml() + " "
+////                + Multimedia.AVATAR.getHtml() + " "
+////                + Human.USER_36.getHtml(), ContentMode.HTML);
+////        lblPru.addStyleName("patientIcon");
+//        //fields.addComponent(lblPru);
+//        return fields;
+//    }
 
     public static void open(final Movie movie, final Date startTime, final Date endTime) {
-        DashboardEventBus.post(new CloseOpenWindowsEvent());
+        DashboardEventBus.post(new DashboardEvent.CloseOpenWindowsEvent());
         Window w = new MovieDetailsWindow(movie, startTime, endTime);
         UI.getCurrent().addWindow(w);
         w.focus();
     }
 
     public static void open(final Date startTime, final Date endTime, boolean newEvent) {
-        DashboardEventBus.post(new CloseOpenWindowsEvent());
+        DashboardEventBus.post(new DashboardEvent.CloseOpenWindowsEvent());
         Window w = new MovieDetailsWindow(startTime, endTime, newEvent);
         UI.getCurrent().addWindow(w);
         w.focus();
     }
 
-    private String setUpperMonth(Date date) {
-        String upperMonth = "";
-        SimpleDateFormat df = new SimpleDateFormat();
-        df.applyPattern("dd MMMM yyyy");
-        //Obteniendo mes de la fecha
-        upperMonth = df.format(date).substring(df.format(date).indexOf(" ") + 1, df.format(date).length() - 4);
-        //Primera letra del mes en Mayuscula
-        upperMonth = df.format(date).replaceFirst(upperMonth.substring(0, 1), upperMonth.substring(0, 1).toUpperCase());
 
-        return upperMonth;
-    }
+    
 
-    private ComboBox createComboHours(String caption, Integer hourStart, Integer hourEnd, Integer comodin) {
-        ComboBox hours = new ComboBox(caption);
-        /*SimpleDateFormat df12 = new SimpleDateFormat();
-         SimpleDateFormat df24 = new SimpleDateFormat();
-         df12.applyPattern("hh:mm a");
-         df24.applyPattern("HH:mm");*/
-        hourStart = comodin == 0 ? hourStart + 1 : hourStart;
-        hourEnd = comodin == 1 ? hourEnd - 1 : hourEnd;
-        
-        for (int i = hourStart; i <= hourEnd; i++) {
-            String h = (i < 10 ? "0" + String.valueOf(i) : i > 12 && i < 22 ? "0" + String.valueOf(i - 12) : i >= 22 ? String.valueOf(i - 12) : String.valueOf(i));
-            String type = (i < 12 ? " AM" : i >= 12 ? " PM" : "");
-            //System.out.println("i"+i);
-            //hours.addItem(df12.format(i));
-            if (i == 24) {
-                hours.addItem(h + ":00" + type);
-            } else {
-                hours.addItem(h + ":00" + type);
-                hours.addItem(h + ":30" + type);
-            }
-        }
-
-        return hours;
-    }
-
-    private CheckBox createCheckBox(String caption) {
-        CheckBox cb = new CheckBox(caption);
-        cb.setImmediate(true);
-        return cb;
-    }
-
-    private void verCheck(Object value) {
-        if (value.equals(true)) {
-            cmbHoursStart.setEnabled(false);
-            cmbHoursEnd.setEnabled(false);
-
-        } else {
-            cmbHoursStart.setEnabled(true);
-            cmbHoursEnd.setEnabled(true);
-        }
-    }
+    
 
     /*
      *PRUEBAS SUGGESTFIELD
