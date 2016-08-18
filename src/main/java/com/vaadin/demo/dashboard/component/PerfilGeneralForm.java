@@ -2,8 +2,6 @@ package com.vaadin.demo.dashboard.component;
 
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.demo.dashboard.DashboardUtils;
-import com.vaadin.demo.dashboard.component.OptionalSelect;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
@@ -57,9 +55,9 @@ public class PerfilGeneralForm extends FormLayout {
         addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
 
         lblSeccion = util.createLabelH4("Datos Generales");
-        txtNombre = new TextField("Nombre(s)");
-        txtApPaterno = new TextField("Apellido Paterno");
-        txtApMaterno = new TextField("Apellido Materno");
+        txtNombre = util.createTextField("Nombre(s)");
+        txtApPaterno = util.createTextField("Apellido Paterno");
+        txtApMaterno = util.createTextField("Apellido Materno");
         //birthDate = new DateField("Fecha Nacimiento");        
         birthDate = util.createDateFieldNac("Fecha Nacimiento");
         rdbGenero = util.createRadioGenero("Género");
