@@ -11133,7 +11133,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .dashboard .viewheader[width-range~="0-700px"] {
-	padding-bottom: 19px;
+	padding-bottom: 75px;
 	text-align: left;
 }
 
@@ -11153,8 +11153,15 @@ div.v-layout.v-horizontal.v-widget {
 	white-space: normal;
 }
 
-.dashboard .viewheader[width-range~="0-700px"] .toolbar  > .v-spacing {
-	height: 9px;
+.dashboard .viewheader[width-range~="0-700px"] .toolbar  > .v-expand {
+	padding-left: 0 !important;
+}
+
+.dashboard .viewheader[width-range~="0-700px"] .toolbar  > .v-expand  > .v-slot {
+	display: block;
+	margin-left: 0 !important;
+	width: 100% !important;
+	text-align: left;
 }
 
 .dashboard .v-caption.v-caption-caption-on-left {
@@ -11211,81 +11218,6 @@ div.v-layout.v-horizontal.v-widget {
 	border-radius: 0;
 }
 
-.dashboard .v-textarea-color1 {
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	-ms-appearance: none;
-	-o-appearance: none;
-	appearance: none;
-	-webkit-user-select: text;
-	-moz-user-select: text;
-	-ms-user-select: text;
-	user-select: text;
-	margin: 0;
-	font: inherit;
-	
-	font-weight: 400;
-	line-height: normal;
-	height: 37px;
-	border-radius: 4px;
-	padding: 6px;
-	border: 1px solid #c87121;
-	background: #fe902a;
-	color: #f4e0ce;
-	-webkit-box-shadow: inset 0 1px 0 #f88b26, 0 1px 0 rgba(255, 255, 255, 0.1);
-	box-shadow: inset 0 1px 0 #f88b26, 0 1px 0 rgba(255, 255, 255, 0.1);
-	-webkit-transition: box-shadow 180ms, border 180ms;
-	-moz-transition: box-shadow 180ms, border 180ms;
-	transition: box-shadow 180ms, border 180ms;
-	height: auto;
-	resize: none;
-	white-space: pre-wrap;
-}
-
-.v-ie8 .dashboard .v-textarea-color1, .v-ie9 .dashboard .v-textarea-color1 {
-	line-height: 37px;
-	padding-top: 0;
-	padding-bottom: 0;
-}
-
-.dashboard .v-textarea-color1.v-disabled {
-	opacity: 0.5;
-	filter: alpha(opacity=50) ;
-}
-
-.dashboard .v-textarea-color1:focus {
-	outline: none;
-	-webkit-transition: none;
-	-moz-transition: none;
-	transition: none;
-	border-color: #197de1;
-	-webkit-box-shadow: 0 0 0 2px rgba(25, 125, 225, 0.5), inset 0 1px 0 #f88b26, 0 1px 0 rgba(255, 255, 255, 0.1);
-	box-shadow: 0 0 0 2px rgba(25, 125, 225, 0.5), inset 0 1px 0 #f88b26, 0 1px 0 rgba(255, 255, 255, 0.1);
-	-webkit-box-shadow: 0 0 0 2px rgba(25, 125, 225, 0.5);
-	box-shadow: 0 0 0 2px rgba(25, 125, 225, 0.5);
-}
-
-.dashboard .v-textarea-color1[class*="prompt"] {
-	color: #ffc692;
-}
-
-.v-ie8 .dashboard .v-textarea-color1, .v-ie9 .dashboard .v-textarea-color1 {
-	line-height: inherit;
-	padding-top: 4px;
-	padding-bottom: 4px;
-}
-
-.dashboard .v-textarea-notes {
-	border-top: 1px solid #dfdfdf;
-	padding: 20px 20px 0;
-	line-height: 20px;
-	font-size: 13px;
-	background: #fffdf2 url(../dashboard/img/notes-bg.png) repeat;
-	background-attachment: local;
-	color: #545145;
-	overflow: auto;
-}
-
 .dashboard .v-calendar-day-number {
 	line-height: 25px;
 	font-size: 16px;
@@ -11302,6 +11234,18 @@ div.v-layout.v-horizontal.v-widget {
 
 .dashboard .v-formlayout.light > table > tbody > [class*="lastrow"] > td {
 	border-bottom: 1px solid #eaeaea;
+}
+
+.dashboard .v-formlayout.light > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-textfield:focus, .dashboard .v-formlayout.light > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-textarea:focus, .dashboard .v-formlayout.light > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-textfield-borderless:focus, .dashboard .v-formlayout.light > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-filterselect input:focus, .dashboard .v-formlayout.light > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-datefield input:focus, .dashboard .v-formlayout.light > table > tbody > [class*="row"] > [class*="contentcell"]  > .v-richtextarea:focus {
+	box-shadow: inset 0 -2px #197de1;
+	outline: medium none;
+	transition: none 0s ease 0s;
+}
+
+.dashboard .v-textfield-borderless:focus {
+	box-shadow: inset 0 -2px #197de1;
+	outline: medium none;
+	transition: none 0s ease 0s;
 }
 
 .dashboard .v-caption-blue-caption {
@@ -11399,8 +11343,7 @@ div.v-layout.v-horizontal.v-widget {
 
 .dashboard .autocomplete-suggestion {
 	position: relative;
-	padding: 0 0.6em;
-	line-height: 23px;
+	line-height: 20px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -11421,6 +11364,37 @@ div.v-layout.v-horizontal.v-widget {
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.05);
 	background-image: linear, to bottom, #1b87e3 2%, #166ed5 98%;
 	box-shadow: 0 1px 0 #4d98e6 inset, 0 -1px 0 #166bca inset, 0 2px 3px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard .autocomplete-suggestion-text {
+	width: 100%;
+}
+
+.dashboard .autocomplete-suggestion-text  > * {
+	position: relative;
+}
+
+.dashboard .autocomplete-suggestion-text  > *::before {
+	content: "&nbsp;";
+	visibility: hidden;
+}
+
+.dashboard .autocomplete-suggestion-text  > * span {
+	left: 0;
+	margin-top: 0.2em;
+	overflow: hidden;
+	position: absolute;
+	right: 0;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.dashboard .patientIcon .v-icon {
+	font-size: 24px;
+}
+
+.dashboard .sizeIcon .v-icon {
+	font-size: 20px;
 }
 
 .dashboard .loginview {
@@ -11854,6 +11828,7 @@ div.v-layout.v-horizontal.v-widget {
 	-webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
 	box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
 	margin-bottom: 8px;
+	padding: 0 20px 20px 20px;
 }
 
 .dashboard .sales-view.sales-view .dashboard-panel-toolbar {
@@ -12347,6 +12322,24 @@ div.v-layout.v-horizontal.v-widget {
 
 .Human {
 	font-family: Human;
+	font-style: normal;
+	font-weight: normal;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	display: inline-block;
+	text-align: center;
+}
+
+@font-face {
+	font-family: SolidIcon;
+	font-weight: normal;
+	font-style: normal;
+	src: url(../valo/util/bourbon/css3/../../../../dashboard/fonts_solid/Flaticon.eot);
+	src: url(../valo/util/bourbon/css3/../../../../dashboard/fonts_solid/Flaticon.eot?#iefix) format("embedded-opentype"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_solid/Flaticon.woff) format("woff"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_solid/Flaticon.ttf) format("truetype"), url(../valo/util/bourbon/css3/../../../../dashboard/fonts_solid/Flaticon.svg#SolidIcon) format("svg");
+}
+
+.SolidIcon {
+	font-family: SolidIcon;
 	font-style: normal;
 	font-weight: normal;
 	-webkit-font-smoothing: antialiased;
