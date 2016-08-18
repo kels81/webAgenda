@@ -27,10 +27,10 @@ public class PerfilUsuarioForm extends FormLayout {
         addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
 
         lblSeccion = util.createLabelH4("Datos Usuario");
-        txtUsuario = new TextField("Usuario");
-        txtEmail = new TextField("Email");
-        txtPassword = new TextField("Password");
-        txtRepPassword = new TextField("Repetir Password");
+        txtUsuario = util.createTextField("Usuario");
+        txtEmail = util.createTextField("Email");
+        txtPassword = util.createTextField("Password");
+        txtRepPassword = util.createTextField("Repetir Password");
         cmbRol = util.createComboProfSalud("Especialidad");
         cmbRol.setValue("Psicólogo");
         
