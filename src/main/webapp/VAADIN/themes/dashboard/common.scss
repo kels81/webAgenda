@@ -352,7 +352,7 @@
         }
 
         @include width-range($max: 700px) {
-            padding-bottom: round($v-unit-size / 2);
+            padding-bottom: round($view-padding * 3);
             text-align: left;
 
             .v-slot-h1 {
@@ -368,6 +368,8 @@
             }
 
             .toolbar {
+                white-space: normal;
+
                 > .v-expand {
                     padding-left: 0 !important;
 
@@ -378,10 +380,10 @@
                         text-align: left;
                     }
 
-/*                    > .v-spacing {
-                        //height: $v-layout-spacing-vertical;
-                        height: round($v-unit-size / 4);
-                    }*/
+                    /*                    > .v-spacing {
+                                            //height: $v-layout-spacing-vertical;
+                                            height: round($v-unit-size / 4);
+                                        }*/
                 }
             }
         }
@@ -451,6 +453,8 @@
         cursor: pointer;
     }
 
+    /* [ ESTILOS PROPIOS PARA FORMULARIO ]*/
+
     [class*="margin-bottom"] > tbody > [class*="lastrow"] > td {
         padding-bottom: 0px;
     }
@@ -458,6 +462,28 @@
     .v-formlayout.light  > table > tbody > [class*="lastrow"] > td {
         border-bottom: 1px solid #eaeaea;
     }
+
+    .v-formlayout.light > table > tbody > [class*="row"] > [class*="contentcell"] {
+        > .v-textfield:focus, 
+        > .v-textarea:focus,
+        > .v-textfield-borderless:focus,
+        > .v-filterselect input:focus,
+        > .v-datefield input:focus,        
+        > .v-richtextarea:focus {
+            box-shadow: inset 0 -2px #197de1;
+            outline: medium none;
+            transition: none 0s ease 0s;
+        }
+        
+    }
+
+    .v-textfield-borderless:focus {
+        box-shadow: inset 0 -2px #197de1;
+        outline: medium none;
+        transition: none 0s ease 0s;
+    }
+
+    /* [ FIN ESTILOS PROPIOS FORMULARIO ]*/
 
     .v-caption-blue-caption{
         color: #197de1;
@@ -600,6 +626,8 @@
     .patientIcon .v-icon {
         font-size: 24px;
     }
-
+    .sizeIcon .v-icon {
+        font-size: 20px;
+    }
 
 }
