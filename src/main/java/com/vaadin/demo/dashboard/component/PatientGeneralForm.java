@@ -49,25 +49,9 @@ public class PatientGeneralForm extends FormLayout {
 
     public PatientGeneralForm() {
         addStyleName(ValoTheme.FORMLAYOUT_LIGHT);
-
-        FieldEvents.FocusListener focusListener = new FieldEvents.FocusListener() {
-            @Override
-            public void focus(FieldEvents.FocusEvent event) {
-                event.getComponent().addStyleName("blue-caption");
-            }
-        };
-
-        FieldEvents.BlurListener blurListener = new FieldEvents.BlurListener() {
-            @Override
-            public void blur(FieldEvents.BlurEvent event) {
-                event.getComponent().removeStyleName("blue-caption");
-            }
-        };
-
+        
         lblSeccion = util.createLabelH4("INFORMACIÓN GENERAL");
         txtNombre = util.createTextField("Nombre(s)");
-        txtNombre.addFocusListener(focusListener);
-        txtNombre.addBlurListener(blurListener);
         txtApPaterno = util.createTextField("Apellido Paterno");
         txtApmaterno = util.createTextField("Apellido Materno");
         txtFechNac = util.createDateFieldNac("Fecha Nacimiento");
