@@ -37,16 +37,16 @@ public class AppointmentForm extends FormLayout {
 
     private final Label lblDate;
     private final CheckBox allDayField ;
-    private HorizontalLayout searchField;
+    private final HorizontalLayout searchField;
     private Button btnSearch;
-    private TextField txtMotivo;
-    private AutocompleteTextField autoComplete;                         //PRUEBAS AUTOCOMPLETE
+    private final TextField txtMotivo;
+    private final AutocompleteTextField autoComplete;                         //PRUEBAS AUTOCOMPLETE
     private ComboBox cmbHoursStart;
     private ComboBox cmbHoursEnd;
     
-    private Property.ValueChangeListener valueChangeListenerHourStart;
-    private Property.ValueChangeListener valueChangeListenerHourEnd;
-    private FieldEvents.TextChangeListener textChangeListener;
+    private final Property.ValueChangeListener valueChangeListenerHourStart;
+    private final Property.ValueChangeListener valueChangeListenerHourEnd;
+    private final FieldEvents.TextChangeListener textChangeListener;
     
     private final DashboardUtils util = new DashboardUtils();
     
@@ -71,13 +71,10 @@ public class AppointmentForm extends FormLayout {
         }
         
         allDayField = util.createCheckBox("Todo el día");
-        allDayField.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                Object value = event.getProperty().getValue();
-                verCheck(value);
-            }
-        });
+        allDayField.addValueChangeListener((Property.ValueChangeEvent event) -> {
+            Object value = event.getProperty().getValue();
+            verCheck(value);
+    });
         
         searchField = new HorizontalLayout();
         searchField.setWidth(100.0f, Unit.PERCENTAGE);
