@@ -241,12 +241,18 @@ public class DashboardUtils {
         return upperMonth;
     }
 
-    FieldEvents.FocusListener focusListener = (FieldEvents.FocusEvent event) -> {
-        event.getComponent().addStyleName("blue-caption");
+    FieldEvents.FocusListener focusListener = new FieldEvents.FocusListener() {
+
+        public void focus(FieldEvents.FocusEvent event) {
+            event.getComponent().addStyleName("blue-caption");
+        }
     };
 
-    FieldEvents.BlurListener blurListener = (FieldEvents.BlurEvent event) -> {
-        event.getComponent().removeStyleName("blue-caption");
+    FieldEvents.BlurListener blurListener = new FieldEvents.BlurListener() {
+
+        public void blur(FieldEvents.BlurEvent event) {
+            event.getComponent().removeStyleName("blue-caption");
+        }
     };
     
     
